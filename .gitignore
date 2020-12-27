@@ -1,0 +1,9 @@
+.git
+libs
+obj
+pre.sh
+src/main.cpp
+src/platformer.cpp
+.vscode
+android-ndk-r16b-linux-x86_64/
+include/obfuscate.h
