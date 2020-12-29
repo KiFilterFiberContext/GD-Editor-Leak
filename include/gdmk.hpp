@@ -25,8 +25,8 @@ struct gdmk
     // template < typename T >
     // uuint32_t T replacement, T* old
 
-    // template < typename T >
-    static bool do_inline_hook( uint32_t address, uint32_t replacement, uint32_t** old ) 
+    template < typename T >
+    static bool do_inline_hook( uint32_t address, T replacement, T* old ) 
     {
         const auto reg_result = registerInlineHook( address, (uint32_t) replacement, (uint32_t **) old ); // &old
         if ( reg_result != ELE7EN_OK )

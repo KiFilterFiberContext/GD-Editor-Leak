@@ -41,7 +41,7 @@ public:
     bool effectLines; // 0x402
     bool editorGround; // 0x403
     bool toggleEffectDuration; // 0x404
-    bool _unk1; // 0x405
+    bool maxUndo; // 0x405
     bool toggleEditorBG; // 0x406
     bool layerLocking; // 0x407
     bool recordOrder; // 0x408
@@ -55,7 +55,7 @@ public:
 
     cocos2d::CCArray* someArray1; // 0x418
     cocos2d::CCArray* someArray2; // 0x41C
-    cocos2d::CCDictionary* dict1; // 0x420
+    cocos2d::CCDictionary* stickyObjectDict_; // 0x420
 
     void* _unk3; // 0x424
 
@@ -120,7 +120,7 @@ public:
     EditorUI* editorUI; // 0x4C4
     CCLayer* BGLayer; // 0x4C8
     cocos2d::CCArray* someArray13; // 0x4CC
-    cocos2d::CCArray* maybeGameObjects; // 0x4D0
+    cocos2d::CCArray* redoList_; // 0x4D0
 
     void* _unk13; // 0x4D4
     void* _unk12; // 0x4D8
@@ -140,18 +140,40 @@ public:
     bool editorColorMode; // 0x501 crashes :(
 
     unsigned char _pad6[ 0xA ]; // 0x502
+    // std::string oldLevelString; 0x508
     int* weirdAlloc; // 0x50C (UNKNOWN ALLOCATION) temp
+    std::vector<GameObject*>* objectVector_; // 0x510
 
-    unsigned char _pad7[ 0x24 ]; // 0x510
+    unsigned char _pad7[ 0x8 ]; // 0x514
+    std::vector<GameObject*>* other5; // 0x51C
+
+    uint32_t _pad520[2]; // 0x520
+    std::vector<cocos2d::CCArray*>* nestedArray1; // 0x528
+
+    uint8_t _pad52C[ 0x8 ]; // 0x52C
     cocos2d::CCDictionary* dict2; // 0x534
+    std::vector<cocos2d::CCArray*>* other4; // 0x538
+    unsigned char _pad36[ 0xc ]; // 0x53C
+    std::vector<bool>* other3; // 0x548
+    uint8_t _pad54c[ 0x10 ]; // 0x54c
 
-    unsigned char _pad36[ 0x24 ]; // 0x538
     std::vector< bool >* allGroupsToggled; // 0x55C
 
-    unsigned char _pad9[ 0x4C ]; // 0x560
+    unsigned char _pad9[ 0x10 ]; // 0x560
+    std::vector<bool>* lockedLayersList_; // 0x570
+
+    uint8_t _pad574[ 0x10 ]; // 0x574
+
+    std::vector<bool>* other2; // 0x584
+    uint8_t _pad588[ 0x10 ]; // 0x588
+    std::vector<bool>* other1; // 0x598
+    uint8_t _pad59c[ 0x10 ]; // 0x5Ac
     std::vector< uint8_t >* toggledGroups; // 0x5AC
 
-    unsigned char _pad35[ 0x20 ]; // 0x5B0
+    unsigned char _pad35[ 0x8 ]; // 0x5B0
+    std::vector<float>* groupPreviewV; // 0x5B8
+
+    unsigned char _pad5bc[ 0x14 ]; // 0x5BC
     cocos2d::CCArray* someArray4; // 0x5D0
     
 public:
