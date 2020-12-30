@@ -14,6 +14,8 @@ public:
     virtual ~EditorUI();
 
     static EditorUI* create( LevelEditorLayer* a1 );
+
+    void updateSlider( );
     
     void updateGroupIDLabel( );
     void toggleStickyControls( bool toggle );

@@ -18,16 +18,10 @@ class DrawGridLayer;
 class LevelEditorLayer : public GJBaseGameLayer 
 {
 public:
-    unsigned char _pad1[ 0x30 ];
-    CCLayer* gridNode; // 0x14C
+    unsigned char _pad3[ 0x138 ]; // 0x290
+    cocos2d::CCArray* someArray15; // 0x3C8
 
-    unsigned char _pad2[ 0x134 ]; // 0x150
- 
-    PlayerObject* p1; // 0x284
-    PlayerObject* p2; // 0x288
-    LevelSettingsObject* settingsObject; // 0x28C
-
-    unsigned char _pad3[ 0x150 ]; // 0x290
+    uint8_t _pad3cc[ 0x14 ]; // 0x3CC
     cocos2d::CCArray* actionArray; // 0x3E0
 
     unsigned char _pad10[ 0x18 ]; // 0x3E4
@@ -66,7 +60,7 @@ public:
     cocos2d::CCArray* someArray8; // 0x438
     cocos2d::CCArray* someArray12; // 0x43C
 
-    void* _unk4; // 0x440
+    cocos2d::CCArray* someArray14; // 0x440
     cocos2d::CCArray* crashThing; // 0x444
 
     cocos2d::CCDictionary* dict5; // 0x448
@@ -197,6 +191,8 @@ public:
 
     void updateVisibility( float a1 );
     void updateGround( float a1 );
+
+    void updateGroundWidth();
 
     void addSpecial( GameObject* gameObj );
     void addToUndoList( UndoObject* undoObj, bool add );
