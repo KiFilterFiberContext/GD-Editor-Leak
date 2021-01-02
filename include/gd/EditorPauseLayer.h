@@ -10,7 +10,7 @@ public:
     EditorPauseLayer();
     virtual ~EditorPauseLayer();
 
-    static EditorPauseLayer* create( LevelEditorLayer* a1 ); // LevelEditorLayer*
+    static EditorPauseLayer* create( LevelEditorLayer* a1 ); 
 
     void onOptions( CCObject* ref );
     void onSave( CCObject* ref );

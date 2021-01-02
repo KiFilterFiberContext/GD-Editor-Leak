@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CCMenuItem.h"
+#include "GDAPI_Macros.h"
 
-typedef void(cocos2d::CCObject::*SEL_MenuHandler)(cocos2d::CCObject *);
 
 class CCMenuItemSpriteExtra : public cocos2d::CCMenuItemSprite 
 {

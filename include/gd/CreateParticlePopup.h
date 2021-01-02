@@ -3,6 +3,15 @@
 #include "FLAlertLayer.h"
 #include "GameObject.h"
 
+class ParticleGameObject : public GameObject 
+{
+public:
+    ParticleGameObject();
+    virtual ~ParticleGameObject();
+
+    static ParticleGameObject* create(  );
+};
+
 class CreateParticlePopup : public FLAlertLayer
 {
 public:

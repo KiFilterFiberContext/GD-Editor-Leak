@@ -100,6 +100,8 @@ typedef void *_PVOID;
 #define CC_SWAP_INT32_BIG_TO_HOST(i) ((CC_HOST_IS_BIG_ENDIAN == true) ? (i) : CC_SWAP32(i))
 #define CC_SWAP_INT16_BIG_TO_HOST(i) ((CC_HOST_IS_BIG_ENDIAN == true) ? (i) : CC_SWAP16(i))
 
+typedef void(cocos2d::CCObject::*SEL_MenuHandler)(cocos2d::CCObject *);
+
 #define GDAPI_ASM
 #define GDAPI_INLINE
 #define GDAPI_NOINLINE
