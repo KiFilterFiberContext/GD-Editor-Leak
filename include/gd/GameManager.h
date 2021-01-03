@@ -34,5 +34,11 @@ public:
     bool getGameVariable( const char* g_var );
     void setGameVariable( const char* g_var, bool toggle );
 
+    bool hasRatingPower( );
+    void setHasRatingPower( int a1 );
+
     cocos2d::ccColor3B colorForIdx( int id ); // ccColor3B
 };
+
+#define GM GameManager::sharedState()
+#define PL GameManager::sharedState()->playLayer

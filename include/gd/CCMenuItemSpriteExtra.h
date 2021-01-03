@@ -10,5 +10,5 @@ public:
     CCMenuItemSpriteExtra();
     virtual ~CCMenuItemSpriteExtra();
     
-    static CCMenuItemSpriteExtra* create( cocos2d::CCNode* sprite, cocos2d::CCNode* a2, cocos2d::CCObject* parentNode, SEL_MenuHandler selector );
+    static CCMenuItemSpriteExtra* create( cocos2d::CCNode* sprite, cocos2d::CCNode* a2, cocos2d::CCObject* parentNode, cocos2d::SEL_MenuHandler selector );
 };

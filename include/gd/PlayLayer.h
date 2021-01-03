@@ -3,19 +3,11 @@
 #include "PlayerObject.h"
 #include "GJGameLevel.h"
 #include "GJEffectManager.h"
+#include "GJBaseGameLayer.h"
 
-class PlayLayer : cocos2d::CCLayer // GJBaseGameLayer
+class PlayLayer : public GJBaseGameLayer // GJBaseGameLayer
 {
 public:
-    unsigned char _pad1[0x2c]; 
-    GJEffectManager* effectManager; // 0x148
-
-    uint8_t _pad4[ 0x138 ]; // 0x14c
-
-    PlayerObject* player1_; // 0x284
-    PlayerObject* player2_; // 0x288
-    LevelSettingsObject* settings_; // 0x28C
-    
     unsigned char _pad3[0xd8]; // 0x290
     bool platformerMode; // 0x368
 
@@ -28,4 +20,5 @@ public:
 
     static PlayLayer* create( GJGameLevel* level, bool a2, bool a3 );
 
+    void toggleInfoLabel( );
 };

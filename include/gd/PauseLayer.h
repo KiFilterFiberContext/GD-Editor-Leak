@@ -1,10 +1,9 @@
 #pragma once
 
-#include "GDAPI_Macros.h"
+#include "CCMenuItem.h" 
 #include "CCBlockLayer.h"
-#include "CCMenuItem.h"
 
-class GD_DLL PauseLayer : public cocos2d::CCBlockLayer
+class PauseLayer : public cocos2d::CCBlockLayer
 {
 public:
     bool showAd_; // 0x1A6
@@ -16,7 +15,7 @@ public:
     
     static PauseLayer *create( bool a1 );
 
-    void createToggleButton( std::string label, SEL_MenuHandler SEL, bool toggle, cocos2d::CCMenu* menu, cocos2d::CCPoint position );
+    void createToggleButton( std::string label, cocos2d::SEL_MenuHandler SEL, bool toggle, cocos2d::CCMenu* menu, cocos2d::CCPoint position );
     void goEdit( );
 
     void musicSliderChanged( cocos2d::CCObject* ref );
@@ -41,5 +40,31 @@ public:
     virtual void keyBackClicked( );
     virtual void keyDown( cocos2d::enumKeyCodes keyCode );
     virtual void customSetup( );
-    virtual void keyUp( cococs2d::enumKeyCodes keyCode );
-}
+    virtual void keyUp( cocos2d::enumKeyCodes keyCode );
+};
+
+#include "CCApplication.h"
+
+class PauseLayerExt : public PauseLayer 
+{
+public:
+
+public:
+    void onSlow( CCObject* ref ) 
+    {
+        auto dir = cocos2d::CCDirector::sharedDirector();
+        dir->getScheduler()->_fTimeScale = 0.5;
+    }
+
+    void onNorm( CCObject* ref ) 
+    {
+        auto dir = cocos2d::CCDirector::sharedDirector();
+        dir->getScheduler()->_fTimeScale = 1;
+    }
+
+    void onFast( CCObject* ref ) 
+    {
+        auto dir = cocos2d::CCDirector::sharedDirector();
+        dir->getScheduler()->_fTimeScale = 2;
+    }
+};

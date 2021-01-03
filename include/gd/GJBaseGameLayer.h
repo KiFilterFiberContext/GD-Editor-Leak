@@ -24,7 +24,7 @@ public:
     int dword13C;
     int dword140;
     OBB2D *obb2; // 0x144
-    int dword148;
+    GJEffectManager *colorManager_; // 0xx148
     cocos2d::CCLayer *gameLayer_; // 0x14C
     bool gap150[56];
     cocos2d::CCSpriteBatchNode *batchNodeAddTop_; // 0x188
