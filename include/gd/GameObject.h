@@ -29,7 +29,6 @@ public:
     bool byte21D;
     bool byte21E;
     bool byte21F;
-    uint32_t dword220;
     bool byte224;
     bool byte225;
     bool byte226;
@@ -39,9 +38,9 @@ public:
     bool byte22e;
     bool byte22f;
     bool byte230;
-    bool inEditor_; // 0x231
+    bool byteidk;
     bool byte232;
-    bool byte233;
+    bool inEditor_; // 0x231 
     bool groupDisabled;
     bool lockColorAsChild;
     uint32_t mainColorMode;
@@ -53,6 +52,7 @@ public:
     uint32_t dword248;
     uint32_t dword24C;
     uint32_t dword250;
+    uint32_t dword2502;
     bool byte254;
     bool isFlipX;
     bool isFlipY;

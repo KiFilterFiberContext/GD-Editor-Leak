@@ -116,7 +116,7 @@ public:
     int objectCount; // 0x4E4
     DrawGridLayer* drawGridLayer; // 0x4E8
     GJGameLevel* level; // 0x4EC
-    uint32_t IDCount; // 0x4F0
+    int IDCount; // 0x4F0
     void* _unk8; // 0x4F4
     void* _unk9; // 0x4F8
     cocos2d::CCDictionary* dict7; // 0x4FC
@@ -125,7 +125,7 @@ public:
     bool hasColor_; // 0x501 
 
     unsigned char _pad6[ 0x6 ]; // 0x502
-    std::string* oldLevelString; // 0x508
+    std::string* oldLevelString_; // 0x508
     int* weirdAlloc; // 0x50C 
     std::vector<GameObject*>* objectVector_; // 0x510
 

@@ -13,21 +13,23 @@ public:
 
     unsigned char _pad2[ 0x4a ]; // 0x160
     bool inEditor_; // 0x1AA
+    bool unk1AB; // 0x1AB
+    int editorScene_; // 0x1AC
 
-    uint8_t _pad1ab[ 0xD ]; // 0x1AB
+    uint8_t _pad1ab[ 0xB ]; // 0x1AD
 
-    uint32_t playerFrame2; // 0x1B8
-    uint32_t playerFrame1; // 0x1BC
-    uint32_t _unk1; // 0x1C0
-    uint32_t shipFrame2; // 0x1C4
-    uint32_t shipFrame1; // 0x1C8
+    int playerFrame2; // 0x1B8
+    int playerFrame1; // 0x1BC
+    int playerFrame_; // 0x1C0
+    int shipFrame2; // 0x1C4
+    int shipFrame1; // 0x1C8
 
     unsigned char _pad3[ 0x4c ]; // 0x1cc
-    uint32_t primaryColorID_2; // 0x218
-    uint32_t primaryColorID_1; // 0x21C
-    uint32_t _unk2;  // 0x220
-    uint32_t secondaryColorID_2; // 0x224
-    uint32_t secondaryColorID_1; // 0x228
+    int primaryColorID_2; // 0x218
+    int primaryColorID_1; // 0x21C
+    int primaryColorID_;  // 0x220
+    int secondaryColorID_2; // 0x224
+    int secondaryColorID_1; // 0x228
 
 public:
     GameManager();
