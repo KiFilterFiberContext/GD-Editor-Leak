@@ -81,8 +81,8 @@ public:
     int likes_;
     int dislikes_;
     int levelLength_;
-    int featured;
-    int dword204;
+    int featured_; // 0x200
+    int epic_; // 0x204
     bool byte208;
     int dword20C;
     int dailyIDRand_;

@@ -35,10 +35,13 @@ public:
     bool byte226;
     bool byte227;
     bool byte228;
-    bool byte229;
-    uint32_t dword22C;
+    bool byte22d; 
+    bool byte22e;
+    bool byte22f;
     bool byte230;
-    bool byte231;
+    bool inEditor_; // 0x231
+    bool byte232;
+    bool byte233;
     bool groupDisabled;
     bool lockColorAsChild;
     uint32_t mainColorMode;

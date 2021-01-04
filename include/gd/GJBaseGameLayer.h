@@ -53,6 +53,14 @@ public:
     PlayerObject* p1; // 0x284
     PlayerObject* p2; // 0x288
     LevelSettingsObject* settingsObject; // 0x28C
+    uint32_t _pad290; // 0x290
+    cocos2d::CCArray* allObjects; // 0x294
+    unsigned char _pad3[ 0xd0 ]; // 0x298
+    bool platformerMode_; // 0x368
+    uint8_t _pad369[ 0x5f ]; // 0x369
+    cocos2d::CCArray* someArray15; // 0x3C8
+    uint8_t _pad3cc[ 0x14 ]; // 0x3CC
+    cocos2d::CCArray* actionArray_; // 0x3E0
 
 public:
     GJBaseGameLayer();

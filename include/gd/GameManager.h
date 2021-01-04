@@ -11,7 +11,11 @@ public:
     PlayLayer* playLayer; // 0x158
     LevelEditorLayer* editorLayer; // 0x15C
 
-    unsigned char _pad2[ 0x58 ]; // 0x160
+    unsigned char _pad2[ 0x4a ]; // 0x160
+    bool inEditor_; // 0x1AA
+
+    uint8_t _pad1ab[ 0xD ]; // 0x1AB
+
     uint32_t playerFrame2; // 0x1B8
     uint32_t playerFrame1; // 0x1BC
     uint32_t _unk1; // 0x1C0

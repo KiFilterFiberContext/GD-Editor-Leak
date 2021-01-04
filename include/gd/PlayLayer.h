@@ -8,10 +8,7 @@
 class PlayLayer : public GJBaseGameLayer // GJBaseGameLayer
 {
 public:
-    unsigned char _pad3[0xd8]; // 0x290
-    bool platformerMode; // 0x368
-
-    unsigned char _pad2[0x2ff]; // 0x369
+    unsigned char _pad2[0x284]; // 0x3e4
     GJGameLevel* level; // 0x668
 
 public:

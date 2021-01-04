@@ -18,12 +18,6 @@ class DrawGridLayer;
 class LevelEditorLayer : public GJBaseGameLayer 
 {
 public:
-    unsigned char _pad3[ 0x138 ]; // 0x290
-    cocos2d::CCArray* someArray15; // 0x3C8
-
-    uint8_t _pad3cc[ 0x14 ]; // 0x3CC
-    cocos2d::CCArray* actionArray; // 0x3E0
-
     unsigned char _pad10[ 0x18 ]; // 0x3E4
 
     bool ignoreDamage; // 0x3FC
@@ -65,15 +59,14 @@ public:
 
     cocos2d::CCDictionary* dict5; // 0x448
     cocos2d::CCArray* arrayWithCap; // 0x44C
-    uint32_t pasteObject; // 0x450 GameObject*
+    GameObject* pasteObject_; // 0x450 
     cocos2d::CCDictionary* dict6; // 0x454
     cocos2d::CCArray* someArray11; // 0x458
 
     uint32_t _unk23; // 0x45C
-    uint32_t _unk24; // 0x460
-    uint32_t _unk25; // 0x464
-
-    uint32_t countCount; // 0x468 no clue
+    int coinCountRand_; // 0x460
+    int coinCountSeed_; // 0x464
+    int coinCount_; // 0x468 
     bool dirtTrigger1; // 0x46C
     bool dirtTrigger2; // 0x46D
     bool dirtTrigger3; // 0x46E
@@ -98,7 +91,7 @@ public:
     uint8_t _unk17; // 0x496
     uint8_t _unk18; // 0x497
 
-    GameObject* startPosObject; // 0x498 GameObject*
+    GameObject* startPosObject; // 0x498 
     OBB2D* obb2d; // 0x4A0
 
     uint32_t _unk29; // 0x4A4
@@ -118,24 +111,22 @@ public:
 
     void* _unk13; // 0x4D4
     void* _unk12; // 0x4D8
-    void* _unk11; // 0x4DC
-    void* _unk10; // 0x4E0
-
-    uint32_t objectCount; // 0x4E4
+    int objCountRand_; // 0x4DC
+    int objCountSeed_; // 0x4E0
+    int objectCount; // 0x4E4
     DrawGridLayer* drawGridLayer; // 0x4E8
     GJGameLevel* level; // 0x4EC
     uint32_t IDCount; // 0x4F0
-
     void* _unk8; // 0x4F4
     void* _unk9; // 0x4F8
     cocos2d::CCDictionary* dict7; // 0x4FC
 
     uint8_t _unk36; // 0x500
-    bool editorColorMode; // 0x501 crashes :(
+    bool hasColor_; // 0x501 
 
-    unsigned char _pad6[ 0xA ]; // 0x502
-    // std::string oldLevelString; 0x508
-    int* weirdAlloc; // 0x50C (UNKNOWN ALLOCATION) temp
+    unsigned char _pad6[ 0x6 ]; // 0x502
+    std::string* oldLevelString; // 0x508
+    int* weirdAlloc; // 0x50C 
     std::vector<GameObject*>* objectVector_; // 0x510
 
     unsigned char _pad7[ 0x8 ]; // 0x514
