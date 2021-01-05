@@ -3,7 +3,6 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE          := cocos2dcpp
-# LOCAL_MODULE_FILENAME := json++_static
 LOCAL_SRC_FILES := $(LOCAL_PATH)/lib/libcocos2dcpp.so
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/includes/cocos2d_x/
 

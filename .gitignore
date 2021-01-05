@@ -1,7 +1,7 @@
 .git
 libs
 obj
-pre.sh
+pre.*
 src/main.cpp
 src/platformer.cpp
 .vscode
