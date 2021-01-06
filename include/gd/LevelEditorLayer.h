@@ -121,7 +121,7 @@ public:
     void* _unk9; // 0x4F8
     cocos2d::CCDictionary* dict7; // 0x4FC
 
-    uint8_t _unk36; // 0x500
+    bool editorColor_; // 0x500
     bool hasColor_; // 0x501 
 
     unsigned char _pad6[ 0x6 ]; // 0x502
