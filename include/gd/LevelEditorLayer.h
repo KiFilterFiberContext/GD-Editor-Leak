@@ -12,6 +12,7 @@
 #include "GameObject.h"
 #include "ZipUtils.h"
 #include "UndoObject.h"
+#include "GJGroundLayer.h"
 
 class DrawGridLayer;
 
@@ -105,7 +106,7 @@ public:
     uint32_t _unk35; // 0x4C0
 
     EditorUI* editorUI; // 0x4C4
-    CCLayer* BGLayer; // 0x4C8
+    CCSprite* BGLayer; // 0x4C8
     cocos2d::CCArray* someArray13; // 0x4CC
     cocos2d::CCArray* redoList_; // 0x4D0
 
@@ -123,10 +124,10 @@ public:
 
     bool editorColor_; // 0x500
     bool hasColor_; // 0x501 
-
-    unsigned char _pad6[ 0x6 ]; // 0x502
+    bool _idk2[ 2 ]; // 0x502
+    GJGroundLayer* groundLayer_; // 0x504
     std::string* oldLevelString_; // 0x508
-    int* weirdAlloc; // 0x50C 
+    int* drawNodes_; // 0x50C  CCPoint**
     std::vector<GameObject*>* objectVector_; // 0x510
 
     unsigned char _pad7[ 0x8 ]; // 0x514

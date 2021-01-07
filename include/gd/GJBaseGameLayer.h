@@ -54,8 +54,11 @@ public:
     PlayerObject* p2; // 0x288
     LevelSettingsObject* settingsObject; // 0x28C
     uint32_t _pad290; // 0x290
-    cocos2d::CCArray* allObjects; // 0x294
-    unsigned char _pad3[ 0xd0 ]; // 0x298
+    cocos2d::CCArray* allObjects; // 0x294 of GameObject*
+    cocos2d::CCArray* sections; // 0x298
+    unsigned char _pad3[ 0xac ]; // 0x29C
+    bool quickUpdatePos_; // 0x348
+    uint8_t _pad4[ 0x1f ]; // 0x349
     bool platformerMode_; // 0x368
     uint8_t _pad369[ 0x5b ]; // 0x369
     cocos2d::CCArray* collisionBlocks_; // 0x3C4

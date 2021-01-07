@@ -19,7 +19,7 @@ struct gdmk
         INVALID_SYMBOL,
         SUCCESS,
     };
-
+    
     static std::tuple< uint32_t, SymError > get_proc_addr( const char* sym );
 
     // template < typename T >
