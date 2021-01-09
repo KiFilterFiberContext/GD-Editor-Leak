@@ -18,4 +18,6 @@ public:
     static PlayLayer* create( GJGameLevel* level, bool a2, bool a3 );
 
     void toggleInfoLabel( );
+    void stopRecording( );
+    void removeAllObjects();
 };

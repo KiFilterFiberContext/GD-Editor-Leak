@@ -106,7 +106,7 @@ public:
     uint32_t _unk35; // 0x4C0
 
     EditorUI* editorUI; // 0x4C4
-    CCSprite* BGLayer; // 0x4C8
+    cocos2d::CCSprite* BGLayer; // 0x4C8
     cocos2d::CCArray* someArray13; // 0x4CC
     cocos2d::CCArray* redoList_; // 0x4D0
 
@@ -128,38 +128,20 @@ public:
     GJGroundLayer* groundLayer_; // 0x504
     std::string* oldLevelString_; // 0x508
     int* drawNodes_; // 0x50C  CCPoint**
-    std::vector<GameObject*>* objectVector_; // 0x510
-
-    unsigned char _pad7[ 0x8 ]; // 0x514
-    std::vector<GameObject*>* other5; // 0x51C
-
-    uint32_t _pad520[2]; // 0x520
-    std::vector<cocos2d::CCArray*>* nestedArray1; // 0x528
-
-    uint8_t _pad52C[ 0x8 ]; // 0x52C
+    std::vector<GameObject*> objectVector_; // 0x510
+    std::vector<GameObject*> other5; // 0x51C
+    std::vector<cocos2d::CCArray*> nestedArray1; // 0x528
     cocos2d::CCDictionary* dict2; // 0x534
-    std::vector<cocos2d::CCArray*>* other4; // 0x538
-    unsigned char _pad36[ 0xc ]; // 0x53C
-    std::vector<bool>* other3; // 0x548
-    uint8_t _pad54c[ 0x10 ]; // 0x54c
-
-    std::vector< bool >* allGroupsToggled; // 0x55C
-
-    unsigned char _pad9[ 0x10 ]; // 0x560
-    std::vector<bool>* lockedLayersList_; // 0x570
-
-    uint8_t _pad574[ 0x10 ]; // 0x574
-
-    std::vector<bool>* other2; // 0x584
-    uint8_t _pad588[ 0x10 ]; // 0x588
-    std::vector<bool>* other1; // 0x598
-    uint8_t _pad59c[ 0x10 ]; // 0x5Ac
-    std::vector< uint8_t >* toggledGroups; // 0x5AC
-
-    unsigned char _pad35[ 0x8 ]; // 0x5B0
-    std::vector<float>* groupPreviewV; // 0x5B8
-
-    unsigned char _pad5bc[ 0x14 ]; // 0x5BC
+    std::vector<cocos2d::CCArray*> other4; // 0x538
+    unsigned char _pad36[ 0x4 ]; // 0x53C
+    std::vector<bool> other3; // 0x548
+    std::vector<bool> allGroupsToggled; // 0x55C
+    std::vector<bool> lockedLayersList_; // 0x570
+    std::vector<bool> other2; // 0x584
+    std::vector<bool> other1; // 0x598
+    std::vector<uint8_t> toggledGroups; // 0x5AC
+    std::vector<float> groupPreviewV; // 0x5B8
+    unsigned char _pad5bc[ 0xc ]; // 0x5BC
     cocos2d::CCArray* someArray4; // 0x5D0
     
 public:
@@ -168,13 +150,12 @@ public:
 
     static LevelEditorLayer* create( GJGameLevel* level );
     static cocos2d::CCScene* scene( GJGameLevel* level );
-
-    // ...
     
     void updateOptions( );
     void setObjectCount( int count );
 
     void createObjectsFromSetup( std::string setup );
+    void resetToggledGroups( );
 
     void updateEditorMode( );
     void createGroundLayer( );
@@ -183,6 +164,8 @@ public:
 
     void updateVisibility( float a1 );
     void updateGround( float a1 );
+
+    bool shouldBlend( int id );
 
     void updateGroundWidth();
 

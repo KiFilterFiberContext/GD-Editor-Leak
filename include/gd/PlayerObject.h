@@ -10,8 +10,12 @@ enum PlayerButton
 class PlayerObject : public cocos2d::CCSprite  // GameObject->CCSpritePlus
 {
 public:
-    unsigned char _pad1[0x8a0]; // padding for CCSprite + 0x10
-    int32_t platformerMode; // 0xA84
+    unsigned char _pad1[0x120]; // padding for CCSprite + 0x10 (0x1e4)
+    int field304; // 0x304
+    uint8_t _pad308[ 0x3f0 ]; // 0x308
+    bool field6f8; // 0x6f8
+    uint8_t _pad6f9[ 0x68b ]; // 0x3f9
+    int platformerMode; // 0xA84
 
 public:
     PlayerObject();
