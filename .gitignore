@@ -2,7 +2,6 @@
 libs
 obj
 pre.*
-src/main.cpp
 src/platformer.cpp
 .vscode
 android-ndk-r16b-linux-x86_64/
