@@ -28,8 +28,9 @@ public:
     int audioTrack_;
     int songID_;
     int levelRev_;
-    bool byte150;
-    bool byte151;
+    bool unlisted_;
+    bool friendsOnly; // 0x151
+    bool padsmth[2];
     int objCountRand_;
     int objCountSeed_;
     int objectCount_;
@@ -38,12 +39,12 @@ public:
     int ratingsSum_;
     int downloads_;
     bool isEditable_;
-    bool byte171;
+    bool isGauntletLevel_; // 0x171
     bool byte172;
-    int dword174;
-    int dword178;
-    bool byte17C;
-    bool byte17D;
+    int wt_;
+    int wt2_;
+    bool lowDetailMode_;
+    bool toggleLowDetail_; // 0x17D
     bool byte17E;
     bool byte17F;
     int isVerRand_;
@@ -51,7 +52,7 @@ public:
     bool isVerified_;
     bool isUploaded_;
     bool hasBeenModified_;
-    int levelVersion_;
+    int levelVersion_; // 0zx18c
     int gameVersion_;
     int attemptRand_;
     int attemptSeed_;
@@ -83,7 +84,7 @@ public:
     int levelLength_;
     int featured_; // 0x200
     int epic_; // 0x204
-    bool byte208;
+    bool hearted_; // 0x208
     int dword20C;
     int dailyIDRand_;
     int dailyIDSeed_;
@@ -91,10 +92,10 @@ public:
     int demonRand_;
     int demonSeed_;
     int demon_;
-    int dword228;
+    int demonDifficulty_; // 0x228
     int starsRand_;
     int starsSeed_;
-    int stars_;
+    int stars_; // 0x234
     bool autoLevel_;
     int coins_;
     int coinsVerRand_;
@@ -130,20 +131,17 @@ public:
     bool isHidden_;
     int requiredCoins_;
     bool isUnlocked_;
-    cocos2d::CCPoint *lastCameraPos_;
-    bool gap2C4[4];
-    int lastEditorZoom_;
+    cocos2d::CCPoint lastCameraPos_; // 0x2C0
+    float lastEditorZoom_;
     int lastBuildTab_;
     int lastBuildPage_;
     int lastBuildGroupID_;
     int levelType_;
     int M_ID;
-    int dword2E0;
-    std::string* capacityString;
-    bool byte2E8;
-    bool byte2E9;
-    int dword2EC;
-    int dword2F0;
+    std::string* tempName_;
+    std::string* capacityString_;
+    int idk2;
+    std::string* levelSeed_; // 0x2EC
     
 public:
     GJGameLevel();
