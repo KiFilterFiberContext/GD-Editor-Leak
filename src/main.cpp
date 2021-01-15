@@ -668,23 +668,17 @@ void updateOptions_hk( EditorPauseLayer* self, CCObject* ref )
     self->removeFromParentAndCleanup( true );
 }
 
-#include "CCFileUtils.h"
-
-/*
-std::string (*filepath)(cocos2d::CCFileUtils*, const char*, bool);
-std::string filepath_hk( cocos2d::CCFileUtils* ptr, const char* path, bool a1 )
+#include "ObjectToolbox.h"
+bool (*toolbox)( ObjectToolbox* );
+bool toolbox_hk( ObjectToolbox* ptr )
 {
-    // LOGD("FILEPATH: %s", path);
-    return filepath( ptr, path, a1 );
-}
+    auto ret = toolbox( ptr );
 
-void (*descText)(EditLevelLayer*, const char*);
-void descText_hk(EditLevelLayer* ptr, const char* data)
-{
-    // TODO:
-    
+    ptr->objectFrameNameDict_->setObject( CCString::create( "" ), std::string("a") );
+    ptr->objectIDFrameDict_->setObject( CCString::create( "" ), 3000 );
+
+    return ret;
 }
-*/
 
 #define OB(c) AY_OBFUSCATE(c)
 
@@ -738,5 +732,8 @@ void lib_entry( )
 
     const auto addr20 = std::get<0>( gdmk::get_proc_addr(OB("_ZN7UILayer12ccTouchEndedEPN7cocos2d7CCTouchEPNS0_7CCEventE")));
     gdmk::do_inline_hook( addr20, touchend_hk, &touchend);
+
+    const auto addr21 = std::get<0>( gdmk::get_proc_addr( typeid(&ObjectToolbox::init).name() );
+    gdmk::do_inline_hook( addr21, toolbox_hk, &toolbox );
 }
 
