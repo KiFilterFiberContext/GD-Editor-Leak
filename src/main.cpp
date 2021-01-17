@@ -668,19 +668,65 @@ void updateOptions_hk( EditorPauseLayer* self, CCObject* ref )
     self->removeFromParentAndCleanup( true );
 }
 
+#include <map>
+
+static const std::map<const char*, int> btnMapping = {
+    { "edit_eShaderBtn_001.png", 2864 },
+    { "edit_eShockWaveBtn_001.png", 2865 },
+    { "edit_eShockLineBtn_001.png", 2866 },
+    { "edit_eGlitchBtn_001.png", 2867 },
+    { "edit_eChromaticBtn_001.png", 2868 },
+    { "edit_eChromaticGlitchBtn_001.png", 2869 },
+    { "edit_ePixelateBtn_001.png", 2870 },
+    { "edit_eLensCircleBtn_001.png", 2871 },
+    { "edit_eRadialBlurBtn_001.png", 2872 },
+    { "edit_eMotionBlurBtn_001.png", 2873 },
+    { "edit_eBulgeBtn_001.png", 2874 },
+    { "edit_eGrayScaleBtn_001.png", 2875 },
+    { "edit_eSepiaBtn_001.png", 2876 },
+    { "edit_eInvertColorBtn_001.png", 2877 }
+};
+
 #include "ObjectToolbox.h"
-bool (*toolbox)( ObjectToolbox* );
-bool toolbox_hk( ObjectToolbox* ptr )
+#include "EditButtonBar.h"
+#include "CreateMenuItem.h"
+
+ObjectToolbox* (*toolbox)( );
+ObjectToolbox* toolbox_hk( )
 {
-    auto ret = toolbox( ptr );
+    LOGD("HOW2");
 
-    ptr->objectFrameNameDict_->setObject( CCString::create( "" ), std::string("a") );
-    ptr->objectIDFrameDict_->setObject( CCString::create( "" ), 3000 );
+    auto tb = toolbox( );
 
-    return ret;
+    for ( const auto [ texture, objectID ] : btnMapping )
+    {
+        tb->objectFrameNameDict_->setObject( CCString::create( texture ), std::string( texture ) );
+        tb->objectIDFrameDict_->setObject( CCString::create( texture ), objectID );
+    } 
+
+    return tb;
 }
 
+bool (*buttonBar)( EditButtonBar*, cocos2d::CCArray*, cocos2d::CCPoint, int, bool, int, int );
+bool buttonBar_hk( EditButtonBar* ptr, cocos2d::CCArray* objectArray, cocos2d::CCPoint pos, int tabIndex, bool a1, int buttonWidth, int buttonHeight )
+{
+    LOGD( "HOW: %i", tabIndex );
+
+    if ( tabIndex != 6 )
+        return buttonBar( ptr, objectArray, pos, tabIndex, a1, buttonWidth, buttonHeight );
+
+    auto editor = GM->editorLayer->editorUI; // EditorUI is nullptr
+    // LOGD( "EDITOR: %x", (uintptr_t) editor->levelEditor_ );
+    
+    objectArray->addObject( editor->getCreateBtn( 2864, 4 ) );
+
+    return buttonBar( ptr, objectArray, pos, tabIndex, a1, buttonWidth, buttonHeight );
+}
+
+
 #define OB(c) AY_OBFUSCATE(c)
+
+#include <typeinfo>
 
 void __attribute__(( constructor )) lib_entry( );
 void lib_entry( )
@@ -733,7 +779,10 @@ void lib_entry( )
     const auto addr20 = std::get<0>( gdmk::get_proc_addr(OB("_ZN7UILayer12ccTouchEndedEPN7cocos2d7CCTouchEPNS0_7CCEventE")));
     gdmk::do_inline_hook( addr20, touchend_hk, &touchend);
 
-    const auto addr21 = std::get<0>( gdmk::get_proc_addr( typeid(&ObjectToolbox::init).name() );
+    const auto addr21 = std::get<0>( gdmk::get_proc_addr( "_ZN13ObjectToolbox11sharedStateEv" ) );
     gdmk::do_inline_hook( addr21, toolbox_hk, &toolbox );
+
+    const auto addr22 = std::get<0>( gdmk::get_proc_addr( "_ZN13EditButtonBar4initEPN7cocos2d7CCArrayENS0_7CCPointEibii" ) );
+    gdmk::do_inline_hook( addr22, buttonBar_hk, &buttonBar );
 }
 
