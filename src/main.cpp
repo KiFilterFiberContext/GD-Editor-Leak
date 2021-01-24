@@ -21,6 +21,7 @@
 #include "CCMenuItemSpriteExtra.h"
 #include "ButtonSprite.h"
 #include "LevelInfoLayer.h"
+#include "ParticlePreviewLayer.h"
 #include <iostream>
 
 #include "obfuscate.h"
@@ -128,7 +129,7 @@ void exitEdit_hk( PauseLayer* ptr )
 {
     auto pl = GM->playLayer;
 
-    pl->stopRecording( );
+    // pl->stopRecording( );
     pl->stopAllActions();
     pl->unscheduleAllSelectors();
     GSM->stopBackgroundMusic();
@@ -311,11 +312,11 @@ bool init_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->p1->setColor( prim_color );
     ptr->p1->setSecondColor( secondary_color );
     ptr->p1->updateGlowColor( );
-    ptr->p1->retain( );
 
     ptr->batchNodePlayer_->addChild( ptr->p1, 10 );
-    ptr->p1->setVisible( false );
     ptr->p1->field304 = 1;
+
+    ptr->p1->setVisible( false );
 
     ptr->p2 = PlayerObject::create(
         gm->playerFrame2 - gm->playerFrame1,
@@ -327,9 +328,9 @@ bool init_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->p2->updateGlowColor( );
     ptr->p2->retain();
 
+    ptr->p2->field6f8 = 1;
+    ptr->p2->field304 = 2;
     ptr->p2->setOpacity( 0 );
-    ptr->p2->field304 = 1;
-    ptr->p2->field6f8 = 2;
 
     ptr->dCross = CCSprite::createWithSpriteFrameName( "d_cross_01_001.png" );
 
@@ -349,19 +350,19 @@ bool init_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     if( gm->getGameVariable( "0066" ) )
         dynamic_cast< GJBaseGameLayer* >( ptr )->enableHighCapacityMode( );
 
-    if( !ptr->settingsObject )
+    if( !ptr->settingsObject_ )
     {
-        ptr->settingsObject = LevelSettingsObject::create( );
-        ptr->settingsObject->gameLevel = ptr->level;
+        ptr->settingsObject_ = LevelSettingsObject::create( );
+        ptr->settingsObject_->gameLevel = ptr->level;
 
-        ptr->settingsObject->retain( );
+        ptr->settingsObject_->retain( );
     } 
 
-    auto c_action1 = ptr->settingsObject->effectManager->getColorAction( 0x3ED );
+    auto c_action1 = ptr->settingsObject_->effectManager->getColorAction( 0x3ED );
     c_action1->thing1 = 0;
     c_action1->thing5 = 1;
 
-    auto c_action2 = ptr->settingsObject->effectManager->getColorAction( 0x3EE );
+    auto c_action2 = ptr->settingsObject_->effectManager->getColorAction( 0x3EE );
     c_action2->thing1 = 0;
     c_action2->thing5 = 1;
 
@@ -385,8 +386,6 @@ bool init_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->schedule( schedule_selector( LevelEditorLayer::updateGround ) );
 
     ptr->firstThing2 = 0;
-
-  
 
     return true;
 }
@@ -418,7 +417,6 @@ GameObject* create_hk( int key )
 
 
     if( strstr( tb, "gdh" ) != NULL 
-    || strstr( tb, "secretCoin" ) != NULL 
     || strstr( tb, "fireball" ) != NULL 
     || strstr( tb, "fire_b" ) != NULL 
     || strstr( tb, "gj22_anim" ) != NULL 
@@ -528,10 +526,10 @@ void dict_hk( cocos2d::CCDictionary* d, CCObject* obj, int key )
     }
 }
 
-void (*pause)(PauseLayer*);
-void pause_hk( PauseLayer* ptr )
+void (*pauseSetup)(PauseLayer*);
+void pauseSetup_hk( PauseLayer* ptr )
 {
-    pause( ptr );
+    pauseSetup( ptr );
     
     auto menu = CCMenu::create( );
 
@@ -578,7 +576,6 @@ void pause_hk( PauseLayer* ptr )
         menu->convertToNodeSpace( CCPoint( size.width - 75, size.height - 80 ) ) );
 }
 
-/*
 bool (*levelinfoinit)( LevelInfoLayer*, GJGameLevel*, bool );
 bool levelinfoinit_hk( LevelInfoLayer* ptr, GJGameLevel* level, bool a3 )
 {
@@ -601,7 +598,6 @@ bool levelinfoinit_hk( LevelInfoLayer* ptr, GJGameLevel* level, bool a3 )
 
     return r;
 }
-*/
 
 #include "CreatorLayer.h"
 
@@ -694,7 +690,7 @@ static const std::map<const char*, int> btnMapping = {
 ObjectToolbox* (*toolbox)( );
 ObjectToolbox* toolbox_hk( )
 {
-    LOGD("HOW2");
+    // LOGD("HOW2");
 
     auto tb = toolbox( );
 
@@ -707,31 +703,84 @@ ObjectToolbox* toolbox_hk( )
     return tb;
 }
 
-bool (*buttonBar)( EditButtonBar*, cocos2d::CCArray*, cocos2d::CCPoint, int, bool, int, int );
-bool buttonBar_hk( EditButtonBar* ptr, cocos2d::CCArray* objectArray, cocos2d::CCPoint pos, int tabIndex, bool a1, int buttonWidth, int buttonHeight )
+CreateMenuItem* (*buttonBar)( EditorUI*, int, cocos2d::CCArray* );
+CreateMenuItem* buttonBar_hk( EditorUI* editor, int id, cocos2d::CCArray* objectArray )
 {
-    LOGD( "HOW: %i", tabIndex );
+    for ( const auto [ texture, objectID ] : btnMapping )
+        objectArray->addObject( editor->getCreateBtn( objectID, 4 ) );
 
-    if ( tabIndex != 6 )
-        return buttonBar( ptr, objectArray, pos, tabIndex, a1, buttonWidth, buttonHeight );
-
-    auto editor = GM->editorLayer->editorUI; // EditorUI is nullptr
-    // LOGD( "EDITOR: %x", (uintptr_t) editor->levelEditor_ );
-    
-    objectArray->addObject( editor->getCreateBtn( 2864, 4 ) );
-
-    return buttonBar( ptr, objectArray, pos, tabIndex, a1, buttonWidth, buttonHeight );
+    return editor->getCreateBtn( id, 4 );
 }
 
+void (*clippingRect)( GLint, GLint, GLsizei, GLsizei );
+void clippingRect_hk( GLint x, GLint y, GLsizei width, GLsizei height )
+{
+    // LOGD( "SIZE: (%i, %i, %i, %i)", x, y, width, height );
+    clippingRect( x, y, 1000, 1000 );
+}
+
+#include <signal.h>
+#include <stdio.h>
+#include <malloc.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <sys/mman.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <dirent.h>
+#include <signal.h>
+#include <sys/mman.h>
+// #include <asm/ptrace.h>
+#include <sys/ptrace.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/user.h>
+#include <unistd.h>
 
 #define OB(c) AY_OBFUSCATE(c)
 
-#include <typeinfo>
+static void handler(int sig, siginfo_t *si, void *vcontext)
+{
+    const auto ctx = reinterpret_cast< ucontext_t* >( vcontext );
+    LOGD("GOT SIGILL AT ADDR: 0x%lx (PC: %lx; R0: %lx)", (long)si->si_addr, (long)ctx->uc_mcontext.arm_pc, (long)ctx->uc_mcontext.arm_r0);
+
+    exit(EXIT_FAILURE);
+}
+
+#include "inlineHook.h"
+#include "relocate.h"
+
+#ifndef PAGE_SIZE
+#define PAGE_SIZE 4096
+#endif
+
+#define PAGE_START(addr)	(~(PAGE_SIZE - 1) & (addr))
+#define SET_BIT0(addr)		(addr | 1)
+#define CLEAR_BIT0(addr)	(addr & 0xFFFFFFFE)
+#define TEST_BIT0(addr)		(addr & 1)
+
+#define ACTION_ENABLE	0
+#define ACTION_DISABLE	1
 
 void __attribute__(( constructor )) lib_entry( );
 void lib_entry( )
 {
     isGauntlet = false;
+
+    auto menu_layer = std::get<0>( gdmk::get_proc_addr( "_ZN9MenuLayer4initEv" ) );
+    
+	mprotect((void *) PAGE_START(CLEAR_BIT0(menu_layer)), PAGE_SIZE * 2, PROT_READ | PROT_WRITE | PROT_EXEC);
+    *(uint16_t*) menu_layer = 0xDEFE; // current: SIGILL / want: SIGTRAP
+	mprotect((void *) PAGE_START(CLEAR_BIT0(menu_layer)), PAGE_SIZE * 2, PROT_READ | PROT_EXEC);
+	cacheflush(CLEAR_BIT0(menu_layer), CLEAR_BIT0(menu_layer) + 2, 0);
+
+    struct sigaction sa;
+    sa.sa_flags = SA_SIGINFO;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_sigaction = handler;
+
+    sigaction(SIGILL, &sa, NULL);
 
     const auto [ addr14, err14 ] = gdmk::get_proc_addr(OB("_ZN16GameStatsManager14isItemUnlockedE10UnlockTypei"));
     gdmk::do_inline_hook( addr14, unlocked_hk, &unlocked);
@@ -756,10 +805,10 @@ void lib_entry( )
     gdmk::do_inline_hook( addr5, sprite_hk, &old5 );
 
     const auto [ addr10, _10 ] = gdmk::get_proc_addr( OB("_ZN10PauseLayer11customSetupEv") );
-    gdmk::do_inline_hook( addr10, pause_hk, &pause );
+    gdmk::do_inline_hook( addr10, pauseSetup_hk, &pauseSetup );
 
-    // const auto [ addr12, _11 ] = gdmk::get_proc_addr( OB("_ZN14LevelInfoLayer4initEP11GJGameLevelb") );
-    // gdmk::do_inline_hook( addr12, levelinfoinit_hk, &levelinfoinit );
+    const auto [ addr12, _11 ] = gdmk::get_proc_addr( OB("_ZN14LevelInfoLayer4initEP11GJGameLevelb") );
+    gdmk::do_inline_hook( addr12, levelinfoinit_hk, &levelinfoinit );
 
     const auto [ addr13, _13 ] = gdmk::get_proc_addr( OB("_ZN7cocos2d12CCDictionary9setObjectEPNS_8CCObjectEi") );
     gdmk::do_inline_hook( addr13, dict_hk, &dict );
@@ -771,7 +820,7 @@ void lib_entry( )
     gdmk::do_inline_hook( addr19, exitEdit_hk, &exitEdit );
 
     const auto addr17 = std::get<0>( gdmk::get_proc_addr(OB("_ZN9MenuLayer4initEv")));
-    gdmk::do_inline_hook( addr17, menu_hk, &menu);
+    // gdmk::do_inline_hook( addr17, menu_hk, &menu);
 
     const auto addr18 = std::get<0>( gdmk::get_proc_addr(OB("_ZN7UILayer12ccTouchBeganEPN7cocos2d7CCTouchEPNS0_7CCEventE")) );
     gdmk::do_inline_hook( addr18, cctouch_hk, &cctouch );
@@ -779,10 +828,13 @@ void lib_entry( )
     const auto addr20 = std::get<0>( gdmk::get_proc_addr(OB("_ZN7UILayer12ccTouchEndedEPN7cocos2d7CCTouchEPNS0_7CCEventE")));
     gdmk::do_inline_hook( addr20, touchend_hk, &touchend);
 
-    const auto addr21 = std::get<0>( gdmk::get_proc_addr( "_ZN13ObjectToolbox11sharedStateEv" ) );
+    const auto addr21 = std::get<0>( gdmk::get_proc_addr( OB( "_ZN13ObjectToolbox11sharedStateEv" ) ) );
     gdmk::do_inline_hook( addr21, toolbox_hk, &toolbox );
+    
+    const auto addr23 = std::get<0>( gdmk::get_proc_addr( OB( "glScissor" ) ) );
+    gdmk::do_inline_hook( addr23, clippingRect_hk, &clippingRect );
 
-    const auto addr22 = std::get<0>( gdmk::get_proc_addr( "_ZN13EditButtonBar4initEPN7cocos2d7CCArrayENS0_7CCPointEibii" ) );
-    gdmk::do_inline_hook( addr22, buttonBar_hk, &buttonBar );
+    // const auto addr22 = std::get<0>( gdmk::get_proc_addr( "_ZN9MenuLayer12onGameCenterEPN7cocos2d8CCObjectE" ) );
+    // gdmk::do_inline_hook( addr22, buttonBar_hk, &buttonBar );
 }
 

@@ -1,6 +1,5 @@
 #include "gdmk.hpp"
 
-
 std::tuple< uint32_t, gdmk::SymError > gdmk::get_proc_addr( const char* sym )
 {
     void* handle = dlopen( "libcocos2dcpp.so", RTLD_LAZY );

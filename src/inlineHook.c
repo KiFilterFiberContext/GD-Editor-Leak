@@ -365,6 +365,7 @@ static void doInlineHook(struct inlineHookItem *item)
 		((uint16_t *) CLEAR_BIT0(item->target_addr))[i++] = item->new_addr >> 16;
 	}
 	else {
+
 		((uint32_t *) (item->target_addr))[0] = 0xe51ff004;	// LDR PC, [PC, #-4]
 		((uint32_t *) (item->target_addr))[1] = item->new_addr;
 	}

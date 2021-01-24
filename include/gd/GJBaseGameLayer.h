@@ -52,10 +52,10 @@ public:
     bool gap274[16];
     PlayerObject* p1; // 0x284
     PlayerObject* p2; // 0x288
-    LevelSettingsObject* settingsObject; // 0x28C
+    LevelSettingsObject* settingsObject_; // 0x28C
     uint32_t _pad290; // 0x290
-    cocos2d::CCArray* allObjects; // 0x294 of GameObject*
-    cocos2d::CCArray* sections; // 0x298
+    cocos2d::CCArray* allObjects_; // 0x294 of GameObject*
+    cocos2d::CCArray* sections_; // 0x298
     unsigned char _pad3[ 0xac ]; // 0x29C
     bool quickUpdatePos_; // 0x348
     uint8_t _pad4[ 0x1f ]; // 0x349
