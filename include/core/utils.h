@@ -5,7 +5,7 @@
 namespace saber::utils 
 {
     static constexpr bool DEBUG_ENABLED = true;
-    static constexpr auto DEBUG_TAG = "** Saber **";
+    static constexpr auto DEBUG_TAG = "**Saber**";
 
     enum log_type 
     {

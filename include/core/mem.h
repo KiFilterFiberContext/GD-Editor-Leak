@@ -11,19 +11,19 @@
 
 #include <dlfcn.h>
 #include <cstring>
-
+#include "utils.h"
 
 namespace saber::core::vm 
 {
     struct traps 
     {
-        static constexpr std::array<std::uint8_t, 2> TRAP_DATA_X86      = { 0xCD, 0x03 };                   // int 3
-        static constexpr std::array<std::uint8_t, 2> TRAP_DATA_X86_2    = { 0x0F, 0x0B };                   // UD2
+        static constexpr std::array<std::uint8_t, 2> TRAP_DATA_X86          = { 0xCD, 0x03 };                   // int 3
+        static constexpr std::array<std::uint8_t, 2> TRAP_DATA_X86_2        = { 0x0F, 0x0B };                   // UD2
 
-        static constexpr std::array<std::uint8_t, 4> TRAP_DATA_ARM      = { 0xF1, 0x00, 0xF0, 0xE7 };       // UDF #1
-        static constexpr std::array<std::uint8_t, 2> TRAP_DATA_THUMB    = { 0xFE, 0xDE };                    // UDF #FDEE
+        static constexpr std::array<std::uint8_t, 4> TRAP_DATA_ARM          = { 0xF1, 0x00, 0xF0, 0xE7 };       // UDF #1
+        static constexpr std::array<std::uint8_t, 2> TRAP_DATA_THUMB        = { 0x1, 0xDE };                    // UDF #1
 
-        static constexpr std::array<std::uint8_t, 4> TRAP_DATA_ARM_THUMB    = { 0xfe, 0xde, 0xff, 0xe7 };   // UDF #FDEE
+        static constexpr std::array<std::uint8_t, 2> NOP_DATA_THUMB         = { 0x00, 0xBF };                   // NOP
     };
 
 #ifndef PAGE_SIZE
@@ -55,12 +55,12 @@ namespace saber::core::vm
             PROT_READ | PROT_EXEC
          );
 
-        cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0(address) + bytes.size(), 0 );
+        cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0( address ) + bytes.size(), 0 );
     }
 
     std::uintptr_t get_proc_addr( const char* lib, const char* sym )
     {
-        void* handle = dlopen( lib, RTLD_LAZY );
+        auto handle = dlopen( lib, RTLD_LAZY );
         if( handle == nullptr )
             return 0;
 

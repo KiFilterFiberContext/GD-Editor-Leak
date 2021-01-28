@@ -1,6 +1,5 @@
 #pragma once
-/*
-#include <signal.h>
+
 #include <stdio.h>
 #include <malloc.h>
 #include <stdlib.h>
@@ -9,33 +8,74 @@
 #include <stdbool.h>
 #include <string.h>
 #include <signal.h>
-*/
+#include <functional>
+#include <vector>
+#include <memory>
+#include <unordered_map>
 
 #include "../mem.h"
 
-/*
-auto menu_layer = std::get<0>( gdmk::get_proc_addr( "_ZN9MenuLayer4initEv" ) );
-
-mprotect((void *) PAGE_START(CLEAR_BIT0(menu_layer)), PAGE_SIZE * 2, PROT_READ | PROT_WRITE | PROT_EXEC);
-*(uint8_t*) menu_layer = 0xCC; // current: SIGILL / want: SIGTRAP
-mprotect((void *) PAGE_START(CLEAR_BIT0(menu_layer)), PAGE_SIZE * 2, PROT_READ | PROT_EXEC);
-cacheflush(CLEAR_BIT0(menu_layer), CLEAR_BIT0(menu_layer) + 2, 0);
-
-LOGD("F: %lx", (uint32_t)menu_layer);
-
-struct sigaction sa;
-sa.sa_flags = SA_SIGINFO;
-sigemptyset(&sa.sa_mask);
-sa.sa_sigaction = handler;
-
-sigaction(SIGILL, &sa, NULL);
-sigaction(SIGSEGV, &sa, NULL); // emulator
-*/
-
 namespace saber::core::hook
 {
-    struct veh
+    enum sig 
     {
-        
+        HUP = 1,
+        INT,
+        QUIT,
+        ILL,
+        TRAP,
+        ABRT,
+        EMT,
+        FPE,
+        KILL,
+        BUS,
+        SEGV,
+        SYS,
+        PIPE,
+        ALRM,
+        TERM,
+        USR1,
+        USR2,
+        CHLD,
+        PWR,
+        WINCH,
+        URG,
+        POLL,
+        STOP,
+        TSTP,
+        CONT,
+        TTIN,
+        TTOU,
+        VTALRM,
+        PROF,
+        XCPU,
+        XFSZ,
+        WAITING,
+        LWP,
+        AIO,
+    };
+
+    using veh_handler_t = void ( int, siginfo_t*, ucontext_t* );
+
+    class veh
+    {
+    private:
+        struct sigaction si;
+
+        std::vector<sig> sigs;
+        std::unordered_map<std::uintptr_t, void*> hooks;
+    
+    public:
+        veh( const std::initializer_list<sig> signals ) : si( { 0 } ), sigs( signals ) { }
+
+        void load_veh( veh_handler_t handler )
+        {
+            si.sa_flags = SA_SIGINFO;
+            sigemptyset(&si.sa_mask);
+            si.sa_sigaction = handler;
+            
+            for ( const auto signal : sigs ) 
+                sigaction(signal, &si, NULL);
+        }
     };
 }
