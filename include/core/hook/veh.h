@@ -32,8 +32,10 @@ sigaction(SIGILL, &sa, NULL);
 sigaction(SIGSEGV, &sa, NULL); // emulator
 */
 
-namespace saber::core::hook::veh
+namespace saber::core::hook
 {
-
-    
+    struct veh
+    {
+        
+    };
 }
