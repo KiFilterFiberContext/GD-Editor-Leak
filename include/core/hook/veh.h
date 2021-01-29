@@ -55,7 +55,15 @@ namespace saber::core::hook
         AIO,
     };
 
-    using veh_handler_t = void ( int, siginfo_t*, ucontext_t* );
+    using veh_handler_t = void ( int, siginfo_t*, void* );
+
+    struct veh_hook_t 
+    {
+        void* function_hk;
+        std::uintptr_t trap_address;
+        std::vector<uint8_t> old_bytes;
+        bool registered;
+    };
 
     class veh
     {
@@ -63,12 +71,12 @@ namespace saber::core::hook
         struct sigaction si;
 
         std::vector<sig> sigs;
-        std::unordered_map<std::uintptr_t, void*> hooks;
+        std::vector<veh_hook_t> hooks;
     
     public:
         veh( const std::initializer_list<sig> signals ) : si( { 0 } ), sigs( signals ) { }
 
-        void load_veh( veh_handler_t handler )
+        void load_handler( veh_handler_t handler ) noexcept
         {
             si.sa_flags = SA_SIGINFO;
             sigemptyset(&si.sa_mask);
@@ -76,6 +84,16 @@ namespace saber::core::hook
             
             for ( const auto signal : sigs ) 
                 sigaction(signal, &si, NULL);
+        }
+
+        std::vector<veh_hook_t> get_hooks( ) const noexcept 
+        {
+            return hooks;
+        }
+
+        void hook( const std::uintptr_t address, void* func ) noexcept
+        { 
+            
         }
     };
 }

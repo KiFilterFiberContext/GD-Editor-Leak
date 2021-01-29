@@ -8,20 +8,28 @@ using namespace saber::core;
 using namespace saber::utils;
 using namespace saber::core::hook;
 
-void handler( int signal, siginfo_t* si, ucontext_t* ctx )
-{
-    log<log_type::error>( "***SIGNAL (%i - %i) HANDLED FROM: 0x%lx", signal, si->si_code, ctx->uc_mcontext.arm_pc );
+static std::array<uint8_t, 2> old_bytes = { 0x00, 0xBF };
+static std::uintptr_t old_addr = 0x0;
 
-    exit(EXIT_FAILURE);
+void handler( int signal, siginfo_t* si, void* reserved )
+{
+    auto ctx = reinterpret_cast< ucontext_t* >( reserved );
+    log<log_type::error>( "***SIGNAL (%i - %i) HANDLED FROM: 0x%lx (ORI: 0x%lx)", signal, si->si_code, ctx->uc_mcontext.arm_pc, old_addr );
+
+    // vm::write( old_addr, old_bytes );
 }
 
 ENTRYPOINT 
 {
     auto addr = vm::get_proc_addr( "libcocos2dcpp.so", "_ZN9MenuLayer4initEv" );
-    log("0ADDR: %lx", (std::uintptr_t)addr);
+    old_addr = addr;
+
+    log("0ADDR: %lx %lx", old_addr, addr);
+
+    vm::read( addr, old_bytes );
 
     hook::veh veh( { sig::TRAP, sig::ILL }  );
-    veh.load_veh( handler );
+    veh.load_handler( handler );
 
     vm::write( addr, vm::traps::TRAP_DATA_THUMB );
 }

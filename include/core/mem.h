@@ -30,10 +30,10 @@ namespace saber::core::vm
     static constexpr std::size_t PAGE_SIZE = 0x1000;
 #endif
 
-    static constexpr auto PAGE_START = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( ~( PAGE_SIZE - 1 ) & (addr) ); };
-    static constexpr auto SET_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr | 1 ); };
-    static constexpr auto CLEAR_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr & 0xFFFFFFFE ); };
-    static constexpr auto TEST_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr & 1 ); };
+    static inline auto PAGE_START = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( ~( PAGE_SIZE - 1 ) & (addr) ); };
+    static inline auto SET_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr | 1 ); };
+    static inline auto CLEAR_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr & 0xFFFFFFFE ); };
+    static inline auto TEST_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr & 1 ); };
 
     template <std::size_t N>
     void write( const std::uintptr_t address, const std::array<uint8_t, N> bytes )
@@ -56,6 +56,15 @@ namespace saber::core::vm
          );
 
         cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0( address ) + bytes.size(), 0 );
+    }
+
+    template <std::size_t N>
+    void read( const std::uintptr_t address, std::array<uint8_t, N>& out )
+    {
+        if ( TEST_BIT0( address ) )
+            std::memcpy( (void*) out.data(), (void*) CLEAR_BIT0( address ), out.size() );
+        else 
+            std::memcpy( (void*) out.data(), (void*) address, out.size() );
     }
 
     std::uintptr_t get_proc_addr( const char* lib, const char* sym )
