@@ -35,7 +35,7 @@ namespace saber::core::vm
     static inline auto CLEAR_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr & 0xFFFFFFFE ); };
     static inline auto TEST_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr & 1 ); };
 
-    template <std::size_t N>
+    template <std::size_t N, bool flush = false>
     void write( const std::uintptr_t address, const std::array<uint8_t, N> bytes )
     {
         mprotect( 
@@ -55,7 +55,8 @@ namespace saber::core::vm
             PROT_READ | PROT_EXEC
          );
 
-        cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0( address ) + bytes.size(), 0 );
+        // if constexpr ( flush )
+        //    cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0( address ) + bytes.size(), 0 );
     }
 
     template <std::size_t N>

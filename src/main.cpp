@@ -16,7 +16,7 @@ void handler( int signal, siginfo_t* si, void* reserved )
     auto ctx = reinterpret_cast< ucontext_t* >( reserved );
     log<log_type::error>( "***SIGNAL (%i - %i) HANDLED FROM: 0x%lx (ORI: 0x%lx)", signal, si->si_code, ctx->uc_mcontext.arm_pc, old_addr );
 
-    // vm::write( old_addr, old_bytes );
+    vm::write( old_addr, old_bytes );
 }
 
 ENTRYPOINT 
