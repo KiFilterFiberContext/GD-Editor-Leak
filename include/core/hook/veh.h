@@ -60,9 +60,10 @@ namespace saber::core::hook
     struct veh_hook_t 
     {
         void* function_hk;
+        bool registered;
+
         std::uintptr_t trap_address;
         std::vector<uint8_t> old_bytes;
-        bool registered;
     };
 
     class veh

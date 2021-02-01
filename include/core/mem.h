@@ -26,6 +26,17 @@ namespace saber::core::vm
         static constexpr std::array<std::uint8_t, 2> NOP_DATA_THUMB         = { 0x00, 0xBF };                   // NOP
     };
 
+    enum page_prot
+    {
+        r = 1,  // 0x1 READ
+        w,      // 0x2 WRITE
+        rw,
+        x,      // 0x4 EXEC
+        rx,
+        wx,
+        rwx,
+    };
+
 #ifndef PAGE_SIZE
     static constexpr std::size_t PAGE_SIZE = 0x1000;
 #endif
@@ -35,28 +46,38 @@ namespace saber::core::vm
     static inline auto CLEAR_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr & 0xFFFFFFFE ); };
     static inline auto TEST_BIT0 = []( const std::uintptr_t addr ) -> std::uintptr_t { return ( addr & 1 ); };
 
-    template <std::size_t N, bool flush = false>
-    void write( const std::uintptr_t address, const std::array<uint8_t, N> bytes )
+    inline void change_page_protect( const std::uintptr_t address, page_prot protection )
     {
         mprotect( 
             reinterpret_cast<void*>( PAGE_START( CLEAR_BIT0( address ) ) ),
             PAGE_SIZE * 2,
-            PROT_READ | PROT_WRITE | PROT_EXEC
+            protection
          );
-        
+    }
+
+    template <std::size_t N, bool flush = false>
+    void write( const std::uintptr_t address, const std::array<uint8_t, N> bytes )
+    {
+        change_page_protect( address, page_prot::rwx );
+
         if ( TEST_BIT0( address ) )
             std::memcpy( (void*) CLEAR_BIT0( address ), (void*) bytes.data(), bytes.size() );
         else 
             std::memcpy( (void*) address, (void*) bytes.data(), bytes.size() );
 
-        mprotect( 
-            reinterpret_cast<void*>( PAGE_START( CLEAR_BIT0( address ) ) ),
-            PAGE_SIZE * 2,
-            PROT_READ | PROT_EXEC
-         );
+        change_page_protect( address, page_prot::rx );
 
-        // if constexpr ( flush )
-        //    cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0( address ) + bytes.size(), 0 );
+        if constexpr ( flush )
+            cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0( address ) + bytes.size(), 0 );
+    }
+
+    template <std::size_t N>
+    inline void write_unchecked( const std::uintptr_t address, const std::array<uint8_t, N> bytes )
+    {
+        if ( TEST_BIT0( address ) )
+            std::memcpy( (void*) CLEAR_BIT0( address ), (void*) bytes.data(), bytes.size() );
+        else 
+            std::memcpy( (void*) address, (void*) bytes.data(), bytes.size() );
     }
 
     template <std::size_t N>
