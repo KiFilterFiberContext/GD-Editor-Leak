@@ -55,6 +55,22 @@ namespace saber::core::vm
          );
     }
 
+    template <bool flush = false>
+    void write( const std::uintptr_t address, const std::vector<uint8_t>& bytes )
+    {
+        change_page_protect( address, page_prot::rwx );
+
+        if ( TEST_BIT0( address ) )
+            std::memcpy( (void*) CLEAR_BIT0( address ), (void*) bytes.data(), bytes.size() );
+        else 
+            std::memcpy( (void*) address, (void*) bytes.data(), bytes.size() );
+
+        change_page_protect( address, page_prot::rx );
+
+        if constexpr ( flush )
+            cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0( address ) + bytes.size(), 0 );
+    }
+
     template <std::size_t N, bool flush = false>
     void write( const std::uintptr_t address, const std::array<uint8_t, N> bytes )
     {
@@ -81,7 +97,15 @@ namespace saber::core::vm
     }
 
     template <std::size_t N>
-    void read( const std::uintptr_t address, std::array<uint8_t, N>& out )
+    void read( const std::uintptr_t address, std::array<std::uint8_t, N>& out )
+    {
+        if ( TEST_BIT0( address ) )
+            std::memcpy( (void*) out.data(), (void*) CLEAR_BIT0( address ), out.size() );
+        else 
+            std::memcpy( (void*) out.data(), (void*) address, out.size() );
+    }
+
+    void read( const std::uintptr_t address, std::vector<std::uint8_t>& out )
     {
         if ( TEST_BIT0( address ) )
             std::memcpy( (void*) out.data(), (void*) CLEAR_BIT0( address ), out.size() );
