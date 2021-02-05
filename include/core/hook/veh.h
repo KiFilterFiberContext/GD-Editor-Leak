@@ -75,16 +75,16 @@ namespace saber::core::hook
         hook_type type;
     };
 
-    std::map<std::uintptr_t, std::shared_ptr<veh_hook_t>> hk_list;
-
     class veh
     {
     public:
         struct sigaction si;
         std::vector<sig> sigs;
+
+        std::map<std::uintptr_t, std::shared_ptr<veh_hook_t>> hk_list;
     
     public:
-        veh( const std::initializer_list<sig> signals ) : si( { 0 } ), sigs( signals ) { }
+        veh( const std::initializer_list<sig> signals ) : si( { 0 } ), sigs( signals ), hk_list( { } ) { }
 
         void load_handler( veh_handler_t handler ) noexcept
         {
@@ -100,45 +100,32 @@ namespace saber::core::hook
         template <hook_type T = hook_type::function, typename F>
         void add_hook( const std::uintptr_t address, F func, bool register_hook ) noexcept
         { 
-            auto hook = std::make_shared<veh_hook_t>( );
+            auto hk = std::make_shared<veh_hook_t>( );
 
-            hook->function_hk = reinterpret_cast< void* >( func );
-            hook->registered = register_hook;
-            hook->trap_address = address;
-            hook->type = T;
+            hk->trap_address = address;
+            hk->registered = register_hook;
+            hk->type = T;
+            hk->function_hk = reinterpret_cast< void* >( func );
 
-            saber::logging::log( "OLD: %lx", hook->trap_address );
+            saber::logging::log( "INSERTING INTO %lx or %lx", vm::CLEAR_BIT0( hk->trap_address ), hk->trap_address );
 
             std::vector<uint8_t> buff( 2 );
             vm::read( address, buff );
 
+            hk->old_bytes = buff;
+
             if ( register_hook )
-                vm::write( hook->trap_address, vm::traps::TRAP_DATA_THUMB );
+                vm::write( address, vm::traps::TRAP_DATA_THUMB );
             
-            hk_list.emplace( address, std::make_shared<veh_hook_t>( veh_hook_t { 
-                reinterpret_cast< void* >( func ), true, address, std::move( buff )
-            } ) );
+            saber::logging::log( "A (MAP SIZE: %i)", hk_list.size( ) );
+            hk_list.emplace( vm::CLEAR_BIT0( address ), hk );
+            saber::logging::log( "B  (MAP SIZE: %i)", hk_list.size( ) );
+        
         }
 
         static void clear_hooks( )
         {
             hk_list.clear( );
-        }
-
-        static void default_handler( int signal, siginfo_t* si, void* reserved )
-        {
-            auto ctx = reinterpret_cast< ucontext_t* >( reserved );
-
-            auto trap_ip = ( std::uintptr_t ) ctx->uc_mcontext.arm_pc;
-            auto hook = hook::hk_list[ trap_ip ];
-
-            saber::logging::log( "***3 SIGNAL HANDLED FROM: 0x%lx OR 0x%lx (0x%lx)", ctx->uc_mcontext.arm_pc, hook->trap_address, hook->function_hk );
-
-            vm::write( trap_ip, hook->old_bytes );
-
-            ctx->uc_mcontext.arm_pc = ( std::uintptr_t ) hook->function_hk;
-
-           // vm::write( trap_ip, vm::traps::TRAP_DATA_THUMB );
         }
     };
 }
