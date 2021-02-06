@@ -13,6 +13,7 @@ using namespace saber::core;
 
 
 volatile sig_atomic_t is_done = false;
+volatile sig_atomic_t is_mid = false;
 volatile sig_atomic_t old_ptr = 0x0;
 
 CREATE_MEM( menuinit, "_ZN9MenuLayer4initEv" )

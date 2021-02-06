@@ -83,7 +83,6 @@ namespace saber::core::hook
     public:
         struct sigaction si;
         std::vector<sig> sigs;
-
     
     public:
         veh( const std::initializer_list<sig> signals ) : si( { 0 } ), sigs( signals ) { }

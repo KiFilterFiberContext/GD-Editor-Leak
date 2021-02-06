@@ -30,6 +30,7 @@ public:
     virtual void registerWithTouchDispatch( );
     virtual void keyBackClicked( );
 
+    virtual void __pad274( );
     virtual void customSetup( );
     virtual void enterLayer( );
     virtual void exitLayer( );
@@ -40,7 +41,6 @@ public:
     virtual void enterAnimFinished( );
     virtual void disableUI( );
     virtual void enableUI( );
-    virtual void _pad274( );
 };
 
 NS_CC_END

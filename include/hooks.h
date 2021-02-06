@@ -436,8 +436,29 @@ GameObject* gameobjcreate_hk( int key )
     
     saber::logging::log("GAMEOBJECT: %i -> %s", key, tb);
 
+    if( strstr(tb, "pixelart") != NULL && strstr(tb, "b_001") == NULL )
+    {
+        auto pixelKey = mid_num( tb );
 
-    return GameObject::createWithKey( 1 );
+        return GameObject::createWithKey( pixelKey > 38 ? 1 : key );
+    }
+
+    if( !strcmp( tb, "pixelb_03_01_001.png" ) )
+        return GameObject::createWithKey( 1 );
+
+    if ( !strcmp( tb, "pixelb_03_02_001.png" ) )
+        return GameObject::createWithKey( 1 );
+
+
+    if( strstr( tb, "gdh" ) != NULL 
+    || strstr( tb, "fireball" ) != NULL 
+    || strstr( tb, "fire_b" ) != NULL 
+    || strstr( tb, "gj22_anim" ) != NULL 
+    || strstr( tb, "pixel" ) != NULL 
+    || strstr( tb, "gjHand2" ) != NULL )
+        return GameObject::createWithKey( 1 );
+
+    return GameObject::createWithKey( key );
 }
 
 bool isGauntlet = true;
@@ -447,7 +468,7 @@ bool isGauntlet = true;
 CCSpriteFrame* (*old5)(CCSpriteFrameCache*, const char*) = nullptr;
 CCSpriteFrame* spritecachename_hk( CCSpriteFrameCache* ptr, const char* s )
 {
-    // saber::logging::log("SPRITE: %s", s);
+    saber::logging::log("SPRITE: %s", s);
 
     if ( !strcmp( s, "pixelb_03_01_color_001.png" ) )
         return ptr->spriteFrameByName( "pixelb_03_01_001.png" );

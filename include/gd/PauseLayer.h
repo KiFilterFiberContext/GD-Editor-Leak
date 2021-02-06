@@ -39,7 +39,7 @@ public:
 
     virtual void keyBackClicked( );
     virtual void keyDown( cocos2d::enumKeyCodes keyCode );
-    virtual void customSetup( );
+    virtual void customSetup( ); // 0x278
     virtual void keyUp( );
 };
 
