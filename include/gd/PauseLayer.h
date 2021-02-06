@@ -40,7 +40,7 @@ public:
     virtual void keyBackClicked( );
     virtual void keyDown( cocos2d::enumKeyCodes keyCode );
     virtual void customSetup( );
-    virtual void keyUp( cocos2d::enumKeyCodes keyCode );
+    virtual void keyUp( );
 };
 
 #include "CCApplication.h"

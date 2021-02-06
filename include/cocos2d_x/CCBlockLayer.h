@@ -40,6 +40,7 @@ public:
     virtual void enterAnimFinished( );
     virtual void disableUI( );
     virtual void enableUI( );
+    virtual void _pad274( );
 };
 
 NS_CC_END

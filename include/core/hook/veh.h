@@ -15,6 +15,8 @@
 #include <map>
 
 #include "../mem.h"
+#include <sync.h>
+
 
 namespace saber::core::hook
 {
@@ -74,6 +76,7 @@ namespace saber::core::hook
 
         hook_type type;
     };
+    std::map<std::uintptr_t, std::shared_ptr<veh_hook_t>> hk_list;
 
     class veh
     {
@@ -81,10 +84,9 @@ namespace saber::core::hook
         struct sigaction si;
         std::vector<sig> sigs;
 
-        std::map<std::uintptr_t, std::shared_ptr<veh_hook_t>> hk_list;
     
     public:
-        veh( const std::initializer_list<sig> signals ) : si( { 0 } ), sigs( signals ), hk_list( { } ) { }
+        veh( const std::initializer_list<sig> signals ) : si( { 0 } ), sigs( signals ) { }
 
         void load_handler( veh_handler_t handler ) noexcept
         {
@@ -97,30 +99,20 @@ namespace saber::core::hook
                 sigaction(signal, &si, NULL);
         }
         
-        template <hook_type T = hook_type::function, typename F>
-        void add_hook( const std::uintptr_t address, F func, bool register_hook ) noexcept
+        template <hook_type T = hook_type::function, std::size_t N>
+        void add_hook( const std::uintptr_t address, std::array<std::uint8_t, N>& old_bytes ) noexcept
         { 
-            auto hk = std::make_shared<veh_hook_t>( );
+            vm::read( address, old_bytes );
+            vm::write( address, vm::traps::TRAP_DATA_THUMB );
+        }
 
-            hk->trap_address = address;
-            hk->registered = register_hook;
-            hk->type = T;
-            hk->function_hk = reinterpret_cast< void* >( func );
-
-            saber::logging::log( "INSERTING INTO %lx or %lx", vm::CLEAR_BIT0( hk->trap_address ), hk->trap_address );
-
-            std::vector<uint8_t> buff( 2 );
-            vm::read( address, buff );
-
-            hk->old_bytes = buff;
-
-            if ( register_hook )
-                vm::write( address, vm::traps::TRAP_DATA_THUMB );
+        template <hook_type T = hook_type::function, std::size_t N>
+        void add_hook( const char* sig, std::array<std::uint8_t, N>& old_bytes ) noexcept
+        { 
+            const auto addr = vm::get_proc_addr( "libcocos2dcpp.so", sig );
             
-            saber::logging::log( "A (MAP SIZE: %i)", hk_list.size( ) );
-            hk_list.emplace( vm::CLEAR_BIT0( address ), hk );
-            saber::logging::log( "B  (MAP SIZE: %i)", hk_list.size( ) );
-        
+            vm::read( addr, old_bytes );
+            vm::write( addr, vm::traps::TRAP_DATA_THUMB );
         }
 
         static void clear_hooks( )

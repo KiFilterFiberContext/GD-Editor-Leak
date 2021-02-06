@@ -12,63 +12,75 @@ using namespace saber::core::hook;
 #include <cocos2d_x/CCSprite.h>
 #include <thread>
 
+#include <sync.h>
+#include <hooks.h>
+
+
+#define CREATE_HOOK( name, sym ) \
+        veh_handler.add_hook( sym, b_##name );
+
+#define HANDLE_TRAP( name ) \
+        if ( arm_pc == name##_ptr ) \
+        { \
+            vm::write( arm_pc, b_##name ); \
+            ctx->uc_mcontext.arm_pc = ( std::uintptr_t ) name##_hk; \
+        }
+
+static void* trap_watchdog( void* arg ) 
+{
+    while ( true )
+    {
+        if ( is_done )
+        {
+            vm::write( old_ptr, vm::traps::TRAP_DATA_THUMB );
+            is_done = false;
+        }
+    }
+
+    return nullptr;
+}
+
 static void default_handler( int signal, siginfo_t* si, void* reserved )
 {
     auto ctx = reinterpret_cast< ucontext_t* >( reserved );
+    auto arm_pc = (std::uintptr_t) vm::CLEAR_BIT0( ctx->uc_mcontext.arm_pc );
 
-    saber::logging::log( "GETTING ORIGINAL PC HANDLED FROM: 0x%lx", ctx->uc_mcontext.arm_pc );
+    HANDLE_TRAP( menuinit )
+    HANDLE_TRAP( spritecachename )
+    HANDLE_TRAP( onedit )
+    HANDLE_TRAP( editorinit )
+    HANDLE_TRAP( gameobjcreate )
+    HANDLE_TRAP( unlocked )
+    HANDLE_TRAP( updateoptions )
+    HANDLE_TRAP( loading )
+    HANDLE_TRAP( pausesetup )
+    HANDLE_TRAP( world )
+    HANDLE_TRAP( cctouch )
+    HANDLE_TRAP( touchend )
 
-// C signal handlers cannot access static/global variables because it's UB
-
-/*
-    auto pc = (std::uintptr_t) ctx->uc_mcontext.arm_pc;
-    auto trap_ip = vm::TEST_BIT0( pc ) ? vm::CLEAR_BIT0( pc ) : pc;
-
-    saber::logging::log( "GETTING MAP VALUE FROM: 0x%lx (MAP SIZE: %i)", trap_ip, hk_list.size( ) );
-
-    try 
-    {
-        auto hk = hk_list.at( trap_ip ); 
-
-        saber::logging::log( "HOOK DATA INFO:\n- Trap: 0x%lx\n- Registered: %i\n- Hook Addr: 0x%lx", 
-            hk->trap_address, hk->registered, (std::uintptr_t) hk->function_hk );
-
-        vm::write( hk->trap_address, hk->old_bytes );
-        ctx->uc_mcontext.arm_pc = ( std::uintptr_t ) hk->function_hk;
-
-        vm::write( trap_ip, vm::traps::TRAP_DATA_THUMB );
-    }
-    catch ( const std::out_of_range& e) 
-    {
-        saber::logging::log( "VALUE NOT FOUND" );
-        exit(EXIT_FAILURE);
-    }
-*/
-}
-bool hk( cocos2d::CCLayer* p1 )
-{
-    dynamic_cast< cocos2d::CCLayer* >( p1 )->init();
-    log( "how how!" );
-
-    p1->addChild( cocos2d::CCSprite::createWithSpriteFrameName( "GJ_logo_001.png" ), 100  );
-
-    return true;
+    old_ptr = arm_pc;
+    is_done = true;
 }
 
 ENTRYPOINT 
 {
-    veh::clear_hooks( );
-
     veh veh_handler( { sig::ILL, sig::TRAP } );
-    veh_handler.load_handler( veh::default_handler );
+    veh_handler.load_handler( default_handler );
 
-    auto addr = vm::get_proc_addr( "libcocos2dcpp.so", "_ZN9MenuLayer4initEv" );
-    veh_handler.add_hook( addr, hk, true );
+    CREATE_HOOK( loading, "_ZN12LoadingLayer16getLoadingStringEv" )
+    CREATE_HOOK( menuinit, "_ZN9MenuLayer4initEv" )
+    CREATE_HOOK( onedit, "_ZN14EditLevelLayer6onEditEPN7cocos2d8CCObjectE" )
+    CREATE_HOOK( editorinit, "_ZN16LevelEditorLayer4initEP11GJGameLevel" )
+    CREATE_HOOK( gameobjcreate, "_ZN10GameObject13createWithKeyEi" )
+    CREATE_HOOK( spritecachename, "_ZN7cocos2d18CCSpriteFrameCache17spriteFrameByNameEPKc" )
+    CREATE_HOOK( unlocked, "_ZN16GameStatsManager14isItemUnlockedE10UnlockTypei" )
+    CREATE_HOOK( updateoptions, "_ZN16EditorPauseLayer8onResumeEPN7cocos2d8CCObjectE" )
+    CREATE_HOOK( pausesetup, "_ZN10PauseLayer11customSetupEv" )
+    CREATE_HOOK( world, "_ZN12CreatorLayer4initEv" )   
+    CREATE_HOOK( cctouch, "_ZN7UILayer12ccTouchBeganEPN7cocos2d7CCTouchEPNS0_7CCEventE" )
+    CREATE_HOOK( touchend, "_ZN7UILayer12ccTouchEndedEPN7cocos2d7CCTouchEPNS0_7CCEventE" )
 
-    std::thread t1([] {
-        saber::logging::log( "IN THR: %i", hook::hk_list.size() );
-    });
-
-    t1.join();
+    pthread_t tid;
+    pthread_create( &tid, nullptr, &trap_watchdog, nullptr );
 }
 

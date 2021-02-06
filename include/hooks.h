@@ -36,6 +36,34 @@
 #include <stdbool.h>
 #include <string.h>
 #include <signal.h>
+#include <MenuLayer.h>
+
+// C signal handlers cannot access static/global variables because it's UB
+
+/*
+    auto pc = (std::uintptr_t) ctx->uc_mcontext.arm_pc;
+    auto trap_ip = vm::TEST_BIT0( pc ) ? vm::CLEAR_BIT0( pc ) : pc;
+
+    saber::logging::log( "GETTING MAP VALUE FROM: 0x%lx (MAP SIZE: %i)", trap_ip, hk_list.size( ) );
+
+    try 
+    {
+        auto hk = hk_list.at( trap_ip ); 
+
+        saber::logging::log( "HOOK DATA INFO:\n- Trap: 0x%lx\n- Registered: %i\n- Hook Addr: 0x%lx", 
+            hk->trap_address, hk->registered, (std::uintptr_t) hk->function_hk );
+
+        vm::write( hk->trap_address, hk->old_bytes );
+        ctx->uc_mcontext.arm_pc = ( std::uintptr_t ) hk->function_hk;
+
+        vm::write( trap_ip, vm::traps::TRAP_DATA_THUMB );
+    }
+    catch ( const std::out_of_range& e) 
+    {
+        saber::logging::log( "VALUE NOT FOUND" );
+        exit(EXIT_FAILURE);
+    }
+*/
 
 using namespace cocos2d;
 
@@ -45,7 +73,7 @@ void (*old2)(LevelEditorLayer*) = nullptr;
 
 GameObject* (*old4)(int) = nullptr;
 
-void onEdit_hk( EditLevelLayer* ptr, cocos2d::CCObject* sender )
+void onedit_hk( EditLevelLayer* ptr, cocos2d::CCObject* sender )
 {
     if ( !ptr->inEditorLayer_ )
     {
@@ -68,7 +96,7 @@ void onEdit_hk( EditLevelLayer* ptr, cocos2d::CCObject* sender )
     }
 }
 
-class MenuLayerExt : public cocos2d::CCLayer 
+class MenuLayerExt : public MenuLayer 
 {
 public:
     void OnBlaze( cocos2d::CCObject* selector) 
@@ -80,10 +108,9 @@ public:
     }
 };
 
-bool (*menu)(CCLayer*);
-bool menu_hk(CCLayer* ptr)
+bool menuinit_hk(MenuLayer* ptr)
 {
-    auto m = menu( ptr );
+    auto m = dynamic_cast< MenuLayer* >( ptr )->init( );
 
     auto pos = CCDirector::sharedDirector()->getWinSize( );
 
@@ -105,7 +132,7 @@ bool menu_hk(CCLayer* ptr)
 bool (*cctouch)(UILayer*, cocos2d::CCTouch*, cocos2d::CCEvent*);
 bool cctouch_hk(UILayer* ptr, cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
-    auto t = cctouch( ptr, pTouch, pEvent );
+    auto t = ptr->ccTouchBegan( pTouch, pEvent );
     auto pos = ptr->convertToNodeSpace( pTouch->getLocation( ) );
 
     if ( ptr->platformerMode_ )
@@ -116,13 +143,11 @@ bool cctouch_hk(UILayer* ptr, cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent
 }
 
 bool (*touchend)(UILayer*, cocos2d::CCTouch*, cocos2d::CCEvent*);
-bool touchend_hk(UILayer* ptr, cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
+void touchend_hk(UILayer* ptr, cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
-    auto t = touchend( ptr, pTouch, pEvent );
+    ptr->ccTouchEnded( pTouch, pEvent );
     if ( ptr->platformerMode_ )
         GameManager::sharedState( )->playLayer->p1->releaseButton(PlayerButton::Jump);
-
-    return t;
 }
 
 #include "CCMenuItemSpriteExtra.h"
@@ -140,7 +165,7 @@ void exitEdit_hk( PauseLayer* ptr )
 {
     auto pl = GM->playLayer;
 
-    // pl->stopRecording( );
+    pl->stopRecording( );
     pl->stopAllActions();
     pl->unscheduleAllSelectors();
     GSM->stopBackgroundMusic();
@@ -152,7 +177,7 @@ void exitEdit_hk( PauseLayer* ptr )
     ptr->goEdit();
 }
 
-bool init_hk( LevelEditorLayer* ptr, GJGameLevel* level )
+bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
 {
     if( !dynamic_cast< GJBaseGameLayer* >( ptr )->init( ) )
         return false;
@@ -185,8 +210,6 @@ bool init_hk( LevelEditorLayer* ptr, GJGameLevel* level )
 
     ptr->level = level;
     gm->editorLayer = ptr;
-
-    // ptr->level->levelVersion_ = 21;
     
     ptr->level->retain( );
 
@@ -407,86 +430,63 @@ inline long mid_num(const std::string& s) {
     return std::strtol(&s[s.find('_') + 1], nullptr, 10);
 }
 
-GameObject* create_hk( int key )
+GameObject* gameobjcreate_hk( int key )
 {
     auto tb = ObjectToolbox::sharedState( )->intKeyToFrame( key );
     
-    // LOGD("GAMEOBJECT: %s", tb);
-    if( strstr(tb, "pixelart") != NULL && strstr(tb, "b_001") == NULL )
-    {
-        auto pixelKey = mid_num( tb );
-        // LOGD("ART: %i", pixelKey);
-
-        return old4( pixelKey > 38 ? 1 : key );
-    }
-
-    if( !strcmp( tb, "pixelb_03_01_001.png" ) )
-        return old4( 1 );
-
-    if ( !strcmp( tb, "pixelb_03_02_001.png" ) )
-        return old4( 1 );
+    saber::logging::log("GAMEOBJECT: %i -> %s", key, tb);
 
 
-    if( strstr( tb, "gdh" ) != NULL 
-    || strstr( tb, "fireball" ) != NULL 
-    || strstr( tb, "fire_b" ) != NULL 
-    || strstr( tb, "gj22_anim" ) != NULL 
-    || strstr( tb, "pixel" ) != NULL 
-    || strstr( tb, "gjHand2" ) != NULL )
-        return old4( 1 );
-
-    auto o = old4( key );
-    
-    return o;
+    return GameObject::createWithKey( 1 );
 }
 
-bool isGauntlet = false;
+bool isGauntlet = true;
 
 #include "CCSpriteFrameCache.h"
 
 CCSpriteFrame* (*old5)(CCSpriteFrameCache*, const char*) = nullptr;
-CCSpriteFrame* sprite_hk( CCSpriteFrameCache* ptr, const char* s )
+CCSpriteFrame* spritecachename_hk( CCSpriteFrameCache* ptr, const char* s )
 {
-    // LOGD("SPRITE: %s", s);
+    // saber::logging::log("SPRITE: %s", s);
 
     if ( !strcmp( s, "pixelb_03_01_color_001.png" ) )
-        return old5( ptr, "pixelb_03_01_001.png" );
+        return ptr->spriteFrameByName( "pixelb_03_01_001.png" );
 
     if ( !strcmp( s, "pixelb_03_02_color_001.png" ) )
-        return old5( ptr, "pixelb_03_02_001.png" );
+        return ptr->spriteFrameByName( "pixelb_03_02_001.png" );
 
     if ( !strcmp( s, "pixelart_045_color_001.png" ) )
-        return old5( ptr, "pixelart_045_001.png" );
+        return ptr->spriteFrameByName( "pixelart_045_001.png" );
 
     if ( !strcmp( s, "pixelart_016_color_001.png" ) )
-        return old5( ptr, "pixelart_016_001.png" );
+        return ptr->spriteFrameByName( "pixelart_016_001.png" );
 
     if ( !strcmp( s, "pixelart_044_color_001.png" ) )
-        return old5( ptr, "pixelart_044_001.png" );
+        return ptr->spriteFrameByName( "pixelart_044_001.png" );
 
     if( !strcmp( s, "GJ_fullBtn_001.png" )  )
-        return old5( ptr, "GJ_creatorBtn_001.png" );
+        return ptr->spriteFrameByName( "GJ_creatorBtn_001.png" );
     
     if( !strcmp( s, "GJ_freeStuffBtn_001.png" )  )
-        return old5( ptr, "GJ_dailyRewardBtn_001.png" );
+        return ptr->spriteFrameByName( "GJ_dailyRewardBtn_001.png" );
 
     if( !strcmp( s, "GJ_freeLevelsBtn_001.png" )  )
-        return old5( ptr, "GJ_moreGamesBtn_001.png" );
+        return ptr->spriteFrameByName( "GJ_moreGamesBtn_001.png" );
 
     if ( !strcmp( s, "GJ_gauntletsBtn_001.png" ) )
     {
         if( !isGauntlet )
         {
             isGauntlet = true;
-            return old5( ptr, "GJ_versusBtn_001.png" );
+            return ptr->spriteFrameByName( "GJ_versusBtn_001.png" );
         }
         {
             isGauntlet = false;
-            return old5( ptr, "GJ_gauntletsBtn_001.png" );
+            return ptr->spriteFrameByName( "GJ_gauntletsBtn_001.png" );
         }
     }
 
-    return old5( ptr, s );
+    return ptr->spriteFrameByName( s );
 }
 
 bool (*unlocked)(void*, int, int);
@@ -538,10 +538,10 @@ void dict_hk( cocos2d::CCDictionary* d, CCObject* obj, int key )
 }
 
 void (*pauseSetup)(PauseLayer*);
-void pauseSetup_hk( PauseLayer* ptr )
+void pausesetup_hk( PauseLayer* ptr )
 {
-    pauseSetup( ptr );
-    
+    ptr->customSetup( );
+
     auto menu = CCMenu::create( );
 
     auto size = CCDirector::sharedDirector()->getWinSize();
@@ -585,6 +585,7 @@ void pauseSetup_hk( PauseLayer* ptr )
         timeBtns, 
         10, 
         menu->convertToNodeSpace( CCPoint( size.width - 75, size.height - 80 ) ) );
+
 }
 
 bool (*levelinfoinit)( LevelInfoLayer*, GJGameLevel*, bool );
@@ -615,7 +616,7 @@ bool levelinfoinit_hk( LevelInfoLayer* ptr, GJGameLevel* level, bool a3 )
 bool (*world)( CreatorLayer* );
 bool world_hk( CreatorLayer* ptr ) 
 {
-    auto r = world( ptr );
+    auto r = ptr->init( );
 
     auto right = CCDirector::sharedDirector()->getScreenRight();
     auto top = CCDirector::sharedDirector()->getScreenTop();
@@ -639,7 +640,7 @@ bool world_hk( CreatorLayer* ptr )
 
 #include "EditorPauseLayer.h"
 void (*updateOptions)(EditorPauseLayer*, CCObject*);
-void updateOptions_hk( EditorPauseLayer* self, CCObject* ref )
+void updateoptions_hk( EditorPauseLayer* self, CCObject* ref )
 {
     if ( self->inEditor_ )
         return;
@@ -723,9 +724,12 @@ CreateMenuItem* buttonBar_hk( EditorUI* editor, int id, cocos2d::CCArray* object
     return editor->getCreateBtn( id, 4 );
 }
 
+
+
 void (*clippingRect)( GLint, GLint, GLsizei, GLsizei );
-void clippingRect_hk( GLint x, GLint y, GLsizei width, GLsizei height )
+void clippingrect_hk( GLint x, GLint y, GLsizei width, GLsizei height )
 {
     // LOGD( "SIZE: (%i, %i, %i, %i)", x, y, width, height );
-    clippingRect( x, y, 1000, 1000 );
+    auto addr = ( void (*)(GLint, GLint, GLsizei, GLsizei ) ) vm::get_proc_addr("libcocos2dcpp.so", "glScissor");
+    addr( x, y, 1000, 1000 );
 }

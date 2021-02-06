@@ -71,7 +71,7 @@ namespace saber::core::vm
             cacheflush( CLEAR_BIT0( address ), CLEAR_BIT0( address ) + bytes.size(), 0 );
     }
 
-    template <std::size_t N, bool flush = false>
+    template <bool flush = false, std::size_t N>
     void write( const std::uintptr_t address, const std::array<uint8_t, N> bytes )
     {
         change_page_protect( address, page_prot::rwx );
