@@ -558,7 +558,7 @@ void dict_hk( cocos2d::CCDictionary* d, CCObject* obj, int key )
     }
 }
 
-void (*pauseSetup)(PauseLayer*);
+void (*ISetup)(PauseLayer*);
 void pausesetup_hk( PauseLayer* ptr )
 {
     ptr->customSetup( );

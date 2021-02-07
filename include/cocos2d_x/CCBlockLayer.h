@@ -30,7 +30,6 @@ public:
     virtual void registerWithTouchDispatch( );
     virtual void keyBackClicked( );
 
-    virtual void __pad274( );
     virtual void customSetup( );
     virtual void enterLayer( );
     virtual void exitLayer( );

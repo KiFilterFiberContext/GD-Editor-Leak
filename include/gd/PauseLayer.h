@@ -34,7 +34,7 @@ public:
     void onTime( cocos2d::CCObject* ref );
     void sfxSliderChanged( cocos2d::CCObject* ref );
 
-    void setpuProgressBars( );
+    void setupProgressBars( );
     void tryShowBanner( float duration );
 
     virtual void keyBackClicked( );

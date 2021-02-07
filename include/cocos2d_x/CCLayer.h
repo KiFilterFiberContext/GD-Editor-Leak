@@ -53,6 +53,12 @@ public:
 	virtual void onEnter();
 	virtual void onEnterTransitionDidFinish();
 	virtual void onExit();
+
+	// necessary for UILayer::ccTouchBegan
+	//
+	// virtual void __pad1AC();
+	// virtual void __pad1B0();
+
 	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
@@ -81,7 +87,6 @@ public:
 	virtual void setKeyboardEnabled(bool);
 	virtual bool isMouseEnabled();
 	virtual void setMouseEnabled(bool);
-	
 	virtual void keyBackClicked();
 	virtual void keyMenuClicked();
 	virtual void keyDown(enumKeyCodes);
