@@ -25,8 +25,6 @@
 #include "ParticlePreviewLayer.h"
 #include <iostream>
 
-#include "obfuscate.h"
-
 #include <signal.h>
 #include <stdio.h>
 #include <malloc.h>
@@ -102,7 +100,7 @@ public:
     void OnBlaze( cocos2d::CCObject* selector) 
     {
         auto app = cocos2d::CCApplication::sharedApplication( );
-        auto url = AY_OBFUSCATE("https://www.youtube.com/channel/UCcfPtuop90e_JzxPkiZ6Q5Q");
+        auto url = "https://www.youtube.com/channel/UCcfPtuop90e_JzxPkiZ6Q5Q";
 
         app->openURL(url);
     }
@@ -116,7 +114,7 @@ bool menuinit_hk(MenuLayer* ptr)
 
     auto menu = CCMenu::create( );
     auto btn = CCMenuItemSpriteExtra::create(
-        ButtonSprite::create( AY_OBFUSCATE("Support Blaze!"), 0.35 ),
+        ButtonSprite::create( "Support Blaze!", 0.35 ),
         nullptr,
         ptr,
         menu_selector(MenuLayerExt::OnBlaze)
@@ -434,7 +432,7 @@ GameObject* gameobjcreate_hk( int key )
 {
     auto tb = ObjectToolbox::sharedState( )->intKeyToFrame( key );
     
-    saber::logging::log("GAMEOBJECT: %i -> %s", key, tb);
+    // saber::logging::log("GAMEOBJECT: %i -> %s", key, tb);
 
     if( strstr(tb, "pixelart") != NULL && strstr(tb, "b_001") == NULL )
     {
@@ -521,9 +519,9 @@ const char* loading_hk( CCLayer* ptr )
 {
     GM->setGameVariable( "0115", true ); // FPS Label
     GM->setGameVariable( "0109", true ); // PlayLayer infoLabel
-    GM->setHasRatingPower( 2 );
+    // GM->setHasRatingPower( 2 );
     
-    return AY_OBFUSCATE("Mod developed by Blaze");
+    return "Mod developed by Blaze";
 }
 
 void (*dict)( CCDictionary*, CCObject*, int);

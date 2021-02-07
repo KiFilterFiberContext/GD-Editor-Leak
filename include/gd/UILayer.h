@@ -35,8 +35,8 @@ public:
     UILayer( );
     virtual ~UILayer( );
 
-    virtual bool init( );
-    virtual void draw( );
+    virtual bool init( ) override;
+    virtual void draw( ) override;
 
     virtual bool ccTouchBegan( cocos2d::CCTouch*, cocos2d::CCEvent* ) override;
     virtual void ccTouchMoved( cocos2d::CCTouch*, cocos2d::CCEvent* ) override;
