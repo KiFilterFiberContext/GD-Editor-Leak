@@ -202,9 +202,9 @@ void onmoregames_hk( MenuLayer* ptr, cocos2d::CCObject* selector )
 
     ifs.close( );
 
-    // saber::logging::log( "%s ALL DATA", content.c_str() );
     FLAlertLayer::create( nullptr, "Stack Trace", ss.str(), "Exit", nullptr, 450., true, 300. )->show( );
 }
+
 
 bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
 {

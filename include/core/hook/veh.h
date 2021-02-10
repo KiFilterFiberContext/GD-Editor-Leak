@@ -126,10 +126,5 @@ namespace saber::core::hook
         {
             hk_list.clear( );
         }
-
-        static void crash_handler( )
-        {
-
-        }
     };
 }

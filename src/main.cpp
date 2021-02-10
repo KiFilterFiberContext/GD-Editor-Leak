@@ -62,16 +62,15 @@ static void default_handler( int signal, siginfo_t* si, void* reserved )
     HANDLE_TRAP( cctouch )
     HANDLE_TRAP( touchend )
     HANDLE_TRAP( onmoregames )
-
+    
     old_ptr = arm_pc;
     is_done = true;
 }
 
 ENTRYPOINT 
 {
-    veh veh_handler( { sig::ILL, sig::TRAP, sig::SEGV } );
+    veh veh_handler( { sig::ILL, sig::TRAP, sig::SEGV } ); // 
     veh_handler.load_handler( default_handler );
-
 
     CREATE_HOOK( loading, "_ZN12LoadingLayer16getLoadingStringEv" )
     CREATE_HOOK( menuinit, "_ZN9MenuLayer4initEv" )

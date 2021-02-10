@@ -82,6 +82,8 @@ public:
 
     GameObject* parentForZLayer( int a1, bool a2, int a3 );
 
+    void tweenValue( float from, float to, int tag, std::string property_key, float duration, int action, float f_rate );
+
     virtual void __unknown19( );
     virtual void __unknown20( );
     virtual void __unknown21( );
