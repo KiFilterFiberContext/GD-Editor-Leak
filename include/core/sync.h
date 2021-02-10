@@ -28,4 +28,9 @@ CREATE_MEM( pausesetup, "_ZN10PauseLayer11customSetupEv" )
 CREATE_MEM( world, "_ZN12CreatorLayer4initEv" )
 CREATE_MEM( cctouch, "_ZN7UILayer12ccTouchBeganEPN7cocos2d7CCTouchEPNS0_7CCEventE" )
 CREATE_MEM( touchend, "_ZN7UILayer12ccTouchEndedEPN7cocos2d7CCTouchEPNS0_7CCEventE" )
-CREATE_MEM( clippingrect, "glScissor" )
+
+//
+// beta tester stack trace
+//
+CREATE_MEM( onmoregames, "_ZN9MenuLayer11onMoreGamesEPN7cocos2d8CCObjectE" )
+

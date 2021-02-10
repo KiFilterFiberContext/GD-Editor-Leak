@@ -1,6 +1,7 @@
 #include "include/core/utils.h"
 #include "include/core/hook/veh.h"
 #include "include/core/mem.h"
+#include "include/core/debug.h"
 
 #define ENTRYPOINT void __attribute__(( constructor )) libentry( )
 
@@ -14,6 +15,7 @@ using namespace saber::core::hook;
 
 #include <sync.h>
 #include <hooks.h>
+#include <mutex>
 
 
 #define CREATE_HOOK( name, sym ) \
@@ -43,7 +45,10 @@ static void* trap_watchdog( void* arg )
 static void default_handler( int signal, siginfo_t* si, void* reserved )
 {
     auto ctx = reinterpret_cast< ucontext_t* >( reserved );
-    auto arm_pc = (std::uintptr_t) vm::CLEAR_BIT0( ctx->uc_mcontext.arm_pc );
+    auto arm_pc = ( std::uintptr_t ) vm::CLEAR_BIT0( ctx->uc_mcontext.arm_pc );
+
+    if ( signal == sig::SEGV )
+        saber::debug::dump( ctx );
 
     HANDLE_TRAP( menuinit )
     HANDLE_TRAP( spritecachename )
@@ -53,10 +58,10 @@ static void default_handler( int signal, siginfo_t* si, void* reserved )
     HANDLE_TRAP( unlocked )
     HANDLE_TRAP( updateoptions )
     HANDLE_TRAP( loading )
-    HANDLE_TRAP( pausesetup )
     HANDLE_TRAP( world )
     HANDLE_TRAP( cctouch )
     HANDLE_TRAP( touchend )
+    HANDLE_TRAP( onmoregames )
 
     old_ptr = arm_pc;
     is_done = true;
@@ -64,8 +69,9 @@ static void default_handler( int signal, siginfo_t* si, void* reserved )
 
 ENTRYPOINT 
 {
-    veh veh_handler( { sig::ILL, sig::TRAP } );
+    veh veh_handler( { sig::ILL, sig::TRAP, sig::SEGV } );
     veh_handler.load_handler( default_handler );
+
 
     CREATE_HOOK( loading, "_ZN12LoadingLayer16getLoadingStringEv" )
     CREATE_HOOK( menuinit, "_ZN9MenuLayer4initEv" )
@@ -75,10 +81,11 @@ ENTRYPOINT
     CREATE_HOOK( spritecachename, "_ZN7cocos2d18CCSpriteFrameCache17spriteFrameByNameEPKc" )
     CREATE_HOOK( unlocked, "_ZN16GameStatsManager14isItemUnlockedE10UnlockTypei" )
     CREATE_HOOK( updateoptions, "_ZN16EditorPauseLayer8onResumeEPN7cocos2d8CCObjectE" )
-    CREATE_HOOK( pausesetup, "_ZN10PauseLayer11customSetupEv" )
+    // CREATE_HOOK( pausesetup, "_ZN10PauseLayer11customSetupEv" )
     CREATE_HOOK( world, "_ZN12CreatorLayer4initEv" )   
     CREATE_HOOK( cctouch, "_ZN7UILayer12ccTouchBeganEPN7cocos2d7CCTouchEPNS0_7CCEventE" )
     CREATE_HOOK( touchend, "_ZN7UILayer12ccTouchEndedEPN7cocos2d7CCTouchEPNS0_7CCEventE" )
+    CREATE_HOOK( onmoregames, "_ZN9MenuLayer11onMoreGamesEPN7cocos2d8CCObjectE" )
 
     pthread_t tid;
     pthread_create( &tid, nullptr, &trap_watchdog, nullptr );

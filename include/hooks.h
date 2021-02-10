@@ -114,7 +114,7 @@ bool menuinit_hk(MenuLayer* ptr)
 
     auto menu = CCMenu::create( );
     auto btn = CCMenuItemSpriteExtra::create(
-        ButtonSprite::create( "Support Blaze!", 0.35 ),
+        ButtonSprite::create( "Download Hentai", 0.35 ),
         nullptr,
         ptr,
         menu_selector(MenuLayerExt::OnBlaze)
@@ -173,6 +173,37 @@ void exitEdit_hk( PauseLayer* ptr )
 
     pl->removeAllObjects();
     ptr->goEdit();
+}
+#include "include/core/debug.h"
+
+void onmoregames_hk( MenuLayer* ptr, cocos2d::CCObject* selector )
+{
+    auto path = cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath() + "crashdump.log";
+
+    std::ifstream ifs( path );
+    std::string content = "File not found.";
+
+    std::stringstream ss;
+
+    if ( ifs.good() )
+    {
+        std::string sLine;
+
+        int i = 0;
+        while ( i < 19 )
+        {
+            getline(ifs, sLine);
+            ss << sLine << std::endl;
+            i++;
+        }
+    }
+    else 
+        ss << "File not found.";
+
+    ifs.close( );
+
+    // saber::logging::log( "%s ALL DATA", content.c_str() );
+    FLAlertLayer::create( nullptr, "Stack Trace", ss.str(), "Exit", nullptr, 450., true, 300. )->show( );
 }
 
 bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )

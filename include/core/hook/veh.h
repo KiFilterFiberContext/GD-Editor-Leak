@@ -77,6 +77,7 @@ namespace saber::core::hook
         hook_type type;
     };
     std::map<std::uintptr_t, std::shared_ptr<veh_hook_t>> hk_list;
+    static uint8_t alternate_stack[65536];
 
     class veh
     {
@@ -89,7 +90,14 @@ namespace saber::core::hook
 
         void load_handler( veh_handler_t handler ) noexcept
         {
-            si.sa_flags = SA_SIGINFO;
+            stack_t ss = { 
+                .ss_sp = reinterpret_cast<void*>( alternate_stack ),
+                .ss_size =  65536,
+                .ss_flags = 0
+            };
+            sigaltstack( &ss, nullptr );
+
+            si.sa_flags = SA_SIGINFO | SA_ONSTACK;
             sigemptyset(&si.sa_mask);
 
             si.sa_sigaction = handler;
@@ -117,6 +125,11 @@ namespace saber::core::hook
         static void clear_hooks( )
         {
             hk_list.clear( );
+        }
+
+        static void crash_handler( )
+        {
+
         }
     };
 }
