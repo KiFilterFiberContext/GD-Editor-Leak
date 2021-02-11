@@ -17,10 +17,10 @@ volatile sig_atomic_t is_mid = false;
 volatile sig_atomic_t old_ptr = 0x0;
 
 CREATE_MEM( menuinit, "_ZN9MenuLayer4initEv" )
-CREATE_MEM( spritecachename, "_ZN7cocos2d18CCSpriteFrameCache17spriteFrameByNameEPKc" )
+CREATE_MEM( spritecachename, "_ZN7cocos2d8CCSprite23initWithSpriteFrameNameEPKc" )
 CREATE_MEM( onedit, "_ZN14EditLevelLayer6onEditEPN7cocos2d8CCObjectE" )
 CREATE_MEM( editorinit, "_ZN16LevelEditorLayer4initEP11GJGameLevel" )
-CREATE_MEM( gameobjcreate, "_ZN10GameObject13createWithKeyEi" )
+CREATE_MEM( gameobjcreate, "_ZN8EditorUI12getCreateBtnEii" )
 CREATE_MEM( unlocked, "_ZN16GameStatsManager14isItemUnlockedE10UnlockTypei" )
 CREATE_MEM( updateoptions, "_ZN16EditorPauseLayer8onResumeEPN7cocos2d8CCObjectE" )
 CREATE_MEM( loading, "_ZN12LoadingLayer16getLoadingStringEv" )

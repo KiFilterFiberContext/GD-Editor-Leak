@@ -56,8 +56,6 @@ public:
 
 	// necessary for UILayer::ccTouchBegan
 	//
-	virtual void __pad1AC();
-	virtual void __pad1B0();
 
 	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);

@@ -459,84 +459,59 @@ inline long mid_num(const std::string& s) {
     return std::strtol(&s[s.find('_') + 1], nullptr, 10);
 }
 
-GameObject* gameobjcreate_hk( int key )
+CreateMenuItem* gameobjcreate_hk( EditorUI* ptr, int key, int btn_type )
 {
-    auto tb = ObjectToolbox::sharedState( )->intKeyToFrame( key );
-    
-    // saber::logging::log("GAMEOBJECT: %i -> %s", key, tb);
-
-    if( strstr(tb, "pixelart") != NULL && strstr(tb, "b_001") == NULL )
-    {
-        auto pixelKey = mid_num( tb );
-
-        return GameObject::createWithKey( pixelKey > 38 ? 1 : key );
-    }
-
-    if( !strcmp( tb, "pixelb_03_01_001.png" ) )
-        return GameObject::createWithKey( 1 );
-
-    if ( !strcmp( tb, "pixelb_03_02_001.png" ) )
-        return GameObject::createWithKey( 1 );
-
-
-    if( strstr( tb, "gdh" ) != NULL 
-    || strstr( tb, "fireball" ) != NULL 
-    || strstr( tb, "fire_b" ) != NULL 
-    || strstr( tb, "gj22_anim" ) != NULL 
-    || strstr( tb, "pixel" ) != NULL 
-    || strstr( tb, "gjHand2" ) != NULL )
-        return GameObject::createWithKey( 1 );
-
-    return GameObject::createWithKey( key );
+    saber::logging::log("ID: %i", key);
+    return ptr->getCreateBtn( 1, btn_type );
 }
 
 bool isGauntlet = true;
 
 #include "CCSpriteFrameCache.h"
 
-CCSpriteFrame* (*old5)(CCSpriteFrameCache*, const char*) = nullptr;
-CCSpriteFrame* spritecachename_hk( CCSpriteFrameCache* ptr, const char* s )
+bool spritecachename_hk( CCSprite* ptr, const char* s )
 {
-    saber::logging::log("SPRITE: %s", s);
+    saber::logging::log("SPRITE: %s", s );
 
+/*
     if ( !strcmp( s, "pixelb_03_01_color_001.png" ) )
-        return ptr->spriteFrameByName( "pixelb_03_01_001.png" );
+        return ptr->initWithSpriteFrameName( "pixelb_03_01_001.png" );
 
     if ( !strcmp( s, "pixelb_03_02_color_001.png" ) )
-        return ptr->spriteFrameByName( "pixelb_03_02_001.png" );
+        return ptr->initWithSpriteFrameName( "pixelb_03_02_001.png" );
 
     if ( !strcmp( s, "pixelart_045_color_001.png" ) )
-        return ptr->spriteFrameByName( "pixelart_045_001.png" );
+        return ptr->initWithSpriteFrameName( "pixelart_045_001.png" );
 
     if ( !strcmp( s, "pixelart_016_color_001.png" ) )
-        return ptr->spriteFrameByName( "pixelart_016_001.png" );
+        return ptr->initWithSpriteFrameName( "pixelart_016_001.png" );
 
     if ( !strcmp( s, "pixelart_044_color_001.png" ) )
-        return ptr->spriteFrameByName( "pixelart_044_001.png" );
+        return ptr->initWithSpriteFrameName( "pixelart_044_001.png" );
 
     if( !strcmp( s, "GJ_fullBtn_001.png" )  )
-        return ptr->spriteFrameByName( "GJ_creatorBtn_001.png" );
+        return ptr->initWithSpriteFrameName( "GJ_creatorBtn_001.png" );
     
     if( !strcmp( s, "GJ_freeStuffBtn_001.png" )  )
-        return ptr->spriteFrameByName( "GJ_dailyRewardBtn_001.png" );
+        return ptr->initWithSpriteFrameName( "GJ_dailyRewardBtn_001.png" );
 
     if( !strcmp( s, "GJ_freeLevelsBtn_001.png" )  )
-        return ptr->spriteFrameByName( "GJ_moreGamesBtn_001.png" );
+        return ptr->initWithSpriteFrameName( "GJ_moreGamesBtn_001.png" );
 
     if ( !strcmp( s, "GJ_gauntletsBtn_001.png" ) )
     {
         if( !isGauntlet )
         {
             isGauntlet = true;
-            return ptr->spriteFrameByName( "GJ_versusBtn_001.png" );
+            return ptr->initWithSpriteFrameName( "GJ_versusBtn_001.png" );
         }
         {
             isGauntlet = false;
-            return ptr->spriteFrameByName( "GJ_gauntletsBtn_001.png" );
+            return ptr->initWithSpriteFrameName( "GJ_gauntletsBtn_001.png" );
         }
     }
-
-    return ptr->spriteFrameByName( s );
+*/
+    return ptr->initWithSpriteFrameName( s );
 }
 
 bool (*unlocked)(void*, int, int);

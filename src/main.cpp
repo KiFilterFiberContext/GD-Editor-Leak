@@ -15,8 +15,6 @@ using namespace saber::core::hook;
 
 #include <sync.h>
 #include <hooks.h>
-#include <mutex>
-
 
 #define CREATE_HOOK( name, sym ) \
         veh_handler.add_hook( sym, b_##name );
@@ -42,6 +40,7 @@ static void* trap_watchdog( void* arg )
     return nullptr;
 }
 
+
 static void default_handler( int signal, siginfo_t* si, void* reserved )
 {
     auto ctx = reinterpret_cast< ucontext_t* >( reserved );
@@ -62,25 +61,27 @@ static void default_handler( int signal, siginfo_t* si, void* reserved )
     HANDLE_TRAP( cctouch )
     HANDLE_TRAP( touchend )
     HANDLE_TRAP( onmoregames )
-    
+
     old_ptr = arm_pc;
     is_done = true;
+
 }
 
 ENTRYPOINT 
 {
-    veh veh_handler( { sig::ILL, sig::TRAP, sig::SEGV } ); // 
+    veh veh_handler( { sig::ILL, sig::TRAP } ); // sig::SEGV
     veh_handler.load_handler( default_handler );
+
 
     CREATE_HOOK( loading, "_ZN12LoadingLayer16getLoadingStringEv" )
     CREATE_HOOK( menuinit, "_ZN9MenuLayer4initEv" )
     CREATE_HOOK( onedit, "_ZN14EditLevelLayer6onEditEPN7cocos2d8CCObjectE" )
     CREATE_HOOK( editorinit, "_ZN16LevelEditorLayer4initEP11GJGameLevel" )
-    CREATE_HOOK( gameobjcreate, "_ZN10GameObject13createWithKeyEi" )
-    CREATE_HOOK( spritecachename, "_ZN7cocos2d18CCSpriteFrameCache17spriteFrameByNameEPKc" )
+    CREATE_HOOK( gameobjcreate, "_ZN8EditorUI12getCreateBtnEii" )
+    // CREATE_HOOK( spritecachename, "_ZN7cocos2d8CCSprite23initWithSpriteFrameNameEPKc" )
     CREATE_HOOK( unlocked, "_ZN16GameStatsManager14isItemUnlockedE10UnlockTypei" )
     CREATE_HOOK( updateoptions, "_ZN16EditorPauseLayer8onResumeEPN7cocos2d8CCObjectE" )
-    // CREATE_HOOK( pausesetup, "_ZN10PauseLayer11customSetupEv" )
+    CREATE_HOOK( pausesetup, "_ZN10PauseLayer11customSetupEv" )
     CREATE_HOOK( world, "_ZN12CreatorLayer4initEv" )   
     CREATE_HOOK( cctouch, "_ZN7UILayer12ccTouchBeganEPN7cocos2d7CCTouchEPNS0_7CCEventE" )
     CREATE_HOOK( touchend, "_ZN7UILayer12ccTouchEndedEPN7cocos2d7CCTouchEPNS0_7CCEventE" )

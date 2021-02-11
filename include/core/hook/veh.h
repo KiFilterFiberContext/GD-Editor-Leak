@@ -16,7 +16,14 @@
 
 #include "../mem.h"
 #include <sync.h>
-
+#include <mutex>
+#include <shared_mutex>
+#include <csignal>
+#include <ucontext.h>
+#include <setjmp.h>
+#include <list>
+#include <algorithm>
+#include <future>
 
 namespace saber::core::hook
 {
@@ -78,6 +85,47 @@ namespace saber::core::hook
     };
     std::map<std::uintptr_t, std::shared_ptr<veh_hook_t>> hk_list;
     static uint8_t alternate_stack[65536];
+
+    //
+    // mutex works in our thread but not when trapping from hooks
+    //
+    class hook_list_t 
+    {
+    public:
+        using read_lock = std::shared_lock<std::shared_timed_mutex>;
+        using write_lock = std::unique_lock<std::shared_timed_mutex>;
+
+    private:
+        mutable std::shared_timed_mutex mtx;
+        std::map<int, int> data;
+
+    public:
+        template <typename T>
+        auto read_data( T key ) noexcept
+        {
+            read_lock( mtx );
+            return data[ key ];
+        }
+
+        void clear( ) noexcept
+        {
+            write_lock( mtx );
+            data.clear( );
+        }
+
+        template <typename T, typename K>
+        void write_data( T key, K value ) noexcept
+        {
+            write_lock( mtx );
+            data.emplace( key, value );
+        }
+
+        int size( ) const noexcept 
+        {
+            read_lock( mtx );
+            return data.size( );
+        }
+    };
 
     class veh
     {
