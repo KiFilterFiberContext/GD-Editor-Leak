@@ -1,18 +1,5 @@
 #include "photon_sdk.h"
 
-#include "LoadingLayer.h"
-#include "GameManager.h"
-#include "LevelInfoLayer.h"
-#include "CCMenuItemSpriteExtra.h"
-#include "CCMenuItem.h"
-#include "CCDirector.h"
-#include "PlayLayer.h"
-
-#include "LevelSearchLayer.h"
-#include "SearchButton.h"
-#include "extensions/network/HttpClient.h"
-#include "GameLevelManager.h"
-
 using photon::core::softbp;
 
 using photon::utils::debug_print;
