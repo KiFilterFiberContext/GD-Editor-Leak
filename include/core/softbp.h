@@ -45,6 +45,9 @@ struct trap_info_t
 	uint8_t instruction[ 4 ];
 };
 
+//
+// no particular reason for 16 
+//
 struct hook_list_t
 {
 	trap_info_t list[ 16 ];
@@ -63,10 +66,16 @@ namespace photon::core
 	struct softbp
 	{
 		static constexpr inline uint8_t AARCH64_BKPT[] = { 0x00, 0x00, 0x20, 0xD4 };	// BRK #0
-		static constexpr inline uint8_t ARM_THUMB_BKPT[ ] = { 0x1, 0xDE };				// UDF #1
-		static constexpr inline uint8_t ARM_BKPT[ ] = { 0xF1, 0x00, 0xF0, 0xE7 };		// UDF #1
+		static constexpr inline uint8_t ARM_THUMB_BKPT[ ] = { 0x1, 0xDE };		// UDF #1
+		static constexpr inline uint8_t ARM_BKPT[ ] = { 0xF1, 0x00, 0xF0, 0xE7 };	// UDF #1
 
 		typedef void (*sighandler_t)(int, siginfo_t*, void*);
+		
+		//
+		// a preferred option would be to utilize the architecture's debug registers 
+		// this allows for trapping code without patching any instructions
+		// however, there is an architectural limit on the amount of debug registers (hence use of software breakpoints)
+		//
 
 		static void* hook_watchdog( void* arg )
 		{
