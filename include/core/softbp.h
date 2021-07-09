@@ -18,7 +18,7 @@ enum arm_inspect_reg
 enum reg_op
 {
 	rd, // read
-	wr	// write
+	wr // write
 };
 
 struct mid_hook_info_t
@@ -78,7 +78,6 @@ namespace photon::core
 					hook_list.prev_index = -1;
 
 					/*
-					// if we're replacing a register value don't execute original instruction
 					if ( hook_list.list[ hook_list.prev_index ].is_mid &&
 						hook_list.list[ hook_list.prev_index ].midinfo.op == reg_op::wr )
 					{
@@ -112,6 +111,11 @@ namespace photon::core
 				{
 					if ( trap_info.is_mid )
 					{
+						//
+						// register write operations are not fully supported as I disbanded the project prior to finishing
+						// there may be some instability as not everything was fully tested
+						//
+
 						if ( trap_info.midinfo.op == reg_op::rd )
 						{
 							// read
@@ -119,7 +123,6 @@ namespace photon::core
 
 							// for reads we have to execute the original instruction
 							// however, for writes we substitue the register value so we can likely skip the instruction and not restore the original bytes
-							//
 
 							vm_write( trap_info.address, trap_info.instruction );
 
@@ -329,7 +332,9 @@ namespace photon::core
 			if ( minfo.op == reg_op::wr && minfo.write_value == nullptr )
 				return -3;
 
+			//
 			// likely not an individual instruction hook
+			//
 			add_mid_entry( address, minfo );
 
 			if ( vm_write( address, softbp::ARM_THUMB_BKPT ) < 0 )
