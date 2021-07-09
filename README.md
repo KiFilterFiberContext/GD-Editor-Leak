@@ -22,7 +22,9 @@ Desite attempts from collaborating members of the programming and reverse engine
 
 Initial reverse engineering was done by bindiffing the leaked lite binary against the 2017 SubZero and 2.0 binaries.  I tracked all modifications and proceeded to perform analysis on any changes made on member offsets and additions to the editor structure.  After support from various people from the community after providing assets, the editor was now functional.  It still lacks full reimplementation, however, due to the requirement of it needing to be fully compatible with other editor routines in order for it to run, it can be considered as a near full recreation of the initialization routine.  Due to some missing textures and other additions, some modifications had to be done for compatibility.
 
-At its current state, the reverse engineered structures are not fully documented.  They only contain the __BARE MINIMUM__ for the editor to function and **do not** contain more recent additions or structures since then.  Do not expect it to be stable as the leaks are incomplete and contain missing implementation details leading to frequent crashes without further modifications.  It also contains relevant code for supporting software breakpoints on ARM processors, however it is not designed to be very extensible due to the fact that I never intended to publish the project and has been left in an disorganized state. 
+## Features
+- At its current state, the reverse engineered structures are not fully documented.  They only contain the __BARE MINIMUM__ for the editor to function and **do not** contain more recent additions or structures since then.  Do not expect it to be stable as the leaks are incomplete and contain missing implementation details leading to frequent crashes without further modifications.  
+- It also contains relevant code for supporting software breakpoints on ARM processors to allow inspecting invidual register contents
 
 ## History Credits
 - [Geometry Dash Unofficial Wiki](https://geometry-dash.fandom.com/wiki/Update_2.2)
