@@ -247,7 +247,8 @@ namespace photon::core
 			sa._u._sa_sigaction = handler;
 
 			//
-			// emulators that JIT compile ARM may produce different signals that may differ from real hardware
+			// android emulators that JIT compile ARM may produce different signals that may differ from real hardware
+			// bluckstacks and nox have different results
 			//
 			sigaction( SIGTRAP, ( struct sigaction* ) &sa, nullptr );
 			sigaction( SIGILL, ( struct sigaction* ) &sa, nullptr );
