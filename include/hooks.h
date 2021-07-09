@@ -38,6 +38,12 @@
 
 // C signal handlers cannot access static/global variables because it's UB
 
+//
+// july 1 2021 
+// most routines and extra functionality has been significantly updated since then
+// it will not consist of neat and orderly code and will be BAD
+//
+
 /*
     auto pc = (std::uintptr_t) ctx->uc_mcontext.arm_pc;
     auto trap_ip = vm::TEST_BIT0( pc ) ? vm::CLEAR_BIT0( pc ) : pc;
@@ -114,7 +120,7 @@ bool menuinit_hk(MenuLayer* ptr)
 
     auto menu = CCMenu::create( );
     auto btn = CCMenuItemSpriteExtra::create(
-        ButtonSprite::create( "Download Hentai", 0.35 ),
+        ButtonSprite::create( "Support!", 0.35 ),
         nullptr,
         ptr,
         menu_selector(MenuLayerExt::OnBlaze)
