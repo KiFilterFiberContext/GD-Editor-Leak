@@ -45,38 +45,12 @@
 // it will not consist of neat and orderly code and require some rewriting for it to work
 //
 
-/*
-    auto pc = (std::uintptr_t) ctx->uc_mcontext.arm_pc;
-    auto trap_ip = vm::TEST_BIT0( pc ) ? vm::CLEAR_BIT0( pc ) : pc;
-
-    saber::logging::log( "GETTING MAP VALUE FROM: 0x%lx (MAP SIZE: %i)", trap_ip, hk_list.size( ) );
-
-    try 
-    {
-        auto hk = hk_list.at( trap_ip ); 
-
-        saber::logging::log( "HOOK DATA INFO:\n- Trap: 0x%lx\n- Registered: %i\n- Hook Addr: 0x%lx", 
-            hk->trap_address, hk->registered, (std::uintptr_t) hk->function_hk );
-
-        vm::write( hk->trap_address, hk->old_bytes );
-        ctx->uc_mcontext.arm_pc = ( std::uintptr_t ) hk->function_hk;
-
-        vm::write( trap_ip, vm::traps::TRAP_DATA_THUMB );
-    }
-    catch ( const std::out_of_range& e) 
-    {
-        saber::logging::log( "VALUE NOT FOUND" );
-        exit(EXIT_FAILURE);
-    }
-*/
-
 using namespace cocos2d;
 
-bool (*old3)(LevelEditorLayer*, GJGameLevel*) = nullptr;
-void (*old)(EditLevelLayer*, cocos2d::CCObject*) = nullptr;
-void (*old2)(LevelEditorLayer*) = nullptr;
-
-GameObject* (*old4)(int) = nullptr;
+//
+// function pointers were required for the old hooking mechanism
+// they are no longer required
+//
 
 void onedit_hk( EditLevelLayer* ptr, cocos2d::CCObject* sender )
 {
