@@ -2,6 +2,35 @@
 
 #include "CCNode.h"
 
+// 
+// 2.0 definition
+//
+// class ColorAction : public CCNode
+// {
+//  char byteE8;
+//  cocos2d::ccColor3B currentColor_;
+//  float currentOpacity_;
+//  float deltaTime_;
+//  cocos2d::ccColor3B fromColor_;
+//  cocos2d::ccColor3B toColor_;
+//  float duration;
+//  bool blend;
+//  _DWORD custom;
+//  _DWORD index;
+//  float fromOpacity;
+//  float toOpacity_;
+//  _DWORD HSVValue_;
+//  _DWORD dword118;
+//  _DWORD dword11C;
+//  _DWORD dword120;
+//  int inheritColorIndex;
+//  _BYTE didProcess;
+//  _BYTE copyOpacity;
+//  _BYTE ignore;
+//  _BYTE ignoreCopyColor;
+// };
+
+//
 class ColorAction : public cocos2d::CCNode 
 {
 public:
