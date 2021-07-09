@@ -10,6 +10,26 @@ using photon::utils::str_replace;
 // there will be code conflicts due to merging new and older debugging code however the core is still intact
 //
 
+//
+// example 
+//
+
+bool ex_callback( LoadingLayer* p, bool useDefault )
+{
+	auto gm = GameManager::sharedState( );
+
+	gm->setGameVariable( "0109", true ); // info label
+	gm->setGameVariable( "0115", true ); // fps label
+	gm->setGameVariable( "0116", true ); // enable custom fps
+	gm->setGameVariable( "0114", true ); // player option?
+	gm->setGameVariable( "0045", true ); // debug draw
+	gm->setGameVariable( "0053", false ); // more games
+	
+	gm->setHasRatingPower( 2 );
+
+	return p->init( useDefault );
+}
+
 USING_NS_CC;
 USING_NS_CC_EXT;
 
