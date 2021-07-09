@@ -1,9 +1,9 @@
 # Geometry Dash 2.2 Leak Editor 
-This repository contains reverse engineered structures and reimplemented editor code needed to restore the editor in the 2019 Geometry Dash 2.2 leaks.
+This repository contains reverse engineered structures and reimplemented editor code needed for my restoration of the editor in the 2019 Geometry Dash 2.2 leaks
 
 ### Disclaimer
+- The code has not been touched in a while and is outdated compared to recent additions in previous months
 - I am not the owner of Geometry Dash nor am I affiliated with RobTop Games.  RobTop has publicly acknowledged the existence of the restoration and any action taken by him will be respected following publication.  
-- The code has not been touched in various months and I claim no responsibility for actions you take with it
 - I do not condone pirating or illegal distrbution of the game.  This repository merely documents my notes and analysis of the editor reimplementation.
 
 ## Details
