@@ -5,6 +5,9 @@
 
 #include <thread>
 
+//
+// can apply to any register
+//
 enum arm_inspect_reg
 {
 	R0,
