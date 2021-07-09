@@ -20,6 +20,10 @@ void phsdk_libmain( void )
 
 	softbp::setup( softbp::sig_handler, false );
 
+	//
+	// no examples for individual instruction traps are published
+	//
+	
 	softbp::hook_with_entry( "_ZN12LoadingLayer4initEb", (void*) ex_callback );
 	softbp::hook_with_entry( "_ZN14LevelInfoLayer4initEP11GJGameLevelb", ( void* ) replay_callback );
 	softbp::hook_with_entry( "_ZN14LevelInfoLayer10onFeaturedEPN7cocos2d8CCObjectE", ( void* ) feature_callback );
