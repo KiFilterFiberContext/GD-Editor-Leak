@@ -24,7 +24,7 @@ Initial reverse engineering was done by bindiffing the leaked lite binary agains
 
 ## Features
 - At its current state, the reverse engineered structures are not fully documented.  They only contain the __BARE MINIMUM__ for the editor to function and **do not** contain more recent additions or structures since then.  Do not expect it to be stable as the leaks are incomplete and contain missing implementation details leading to frequent crashes without further modifications.  
-- It also contains relevant code for supporting software breakpoints on ARM processors to allow inspecting invidual register contents
+- It also contains relevant code for supporting software breakpoints on ARM processors to allow inspecting of register contents and individual instruction traps (hooks)
 
 ## History Credits
 - [Geometry Dash Unofficial Wiki](https://geometry-dash.fandom.com/wiki/Update_2.2)
