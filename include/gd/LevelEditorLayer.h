@@ -1,18 +1,11 @@
 #pragma once
 
-#include "GJGameLevel.h"
-#include "GJBaseGameLayer.h"
-#include "CCScene.h"
 #include "DrawGridLayer.h"
-#include "PlayerObject.h"
-#include "GameObject.h"
-#include "LevelSettingsObject.h"
-#include "EditorUI.h"
-#include "obb2d.h"
-#include "GameObject.h"
-#include "ZipUtils.h"
-#include "UndoObject.h"
 #include "GJGroundLayer.h"
+#include "UndoObject.h"
+#include "obb2d.h"
+#include "EditorUI.h"
+#include "GJBaseGameLayer.h"
 
 class DrawGridLayer;
 
@@ -38,9 +31,9 @@ public:
     bool _unk2; // 0x40A
     bool smoothFix; // 0x40B
 
-    uint32_t _unk20; // 0x40C
-    uint32_t _unk21; // 0x410
-    uint32_t _unk22; // 0x414
+    uintptr_t _unk20; // 0x40C
+    uintptr_t _unk21; // 0x410
+    uintptr_t _unk22; // 0x414
 
     cocos2d::CCArray* someArray1; // 0x418
     cocos2d::CCArray* someArray2; // 0x41C
@@ -64,7 +57,7 @@ public:
     cocos2d::CCDictionary* dict6; // 0x454
     cocos2d::CCArray* someArray11; // 0x458
 
-    uint32_t _unk23; // 0x45C
+    uintptr_t _unk23; // 0x45C
     int coinCountRand_; // 0x460
     int coinCountSeed_; // 0x464
     int coinCount_; // 0x468 
@@ -87,23 +80,23 @@ public:
     uint8_t firstThing2; // 0x48C
 
     uint8_t _unk14; // 0x48D
-    uint32_t _unk15; // 0x48E
-    uint32_t _unk16; // 0x492
+    uintptr_t _unk15; // 0x48E
+    uintptr_t _unk16; // 0x492
     uint8_t _unk17; // 0x496
     uint8_t _unk18; // 0x497
 
     GameObject* startPosObject; // 0x498 
     OBB2D* obb2d; // 0x4A0
 
-    uint32_t _unk29; // 0x4A4
+    uintptr_t _unk29; // 0x4A4
     cocos2d::CCSprite* dCross; // 0x4A8
 
-    uint32_t _unk30; // 0x4AC
-    uint32_t _unk31; // 0x4B0
-    uint32_t _unk32; // 0x4B4
-    uint32_t _unk33; // 0x4B8
-    uint32_t _unk34; // 0x4BC
-    uint32_t _unk35; // 0x4C0
+    uintptr_t _unk30; // 0x4AC
+    uintptr_t _unk31; // 0x4B0
+    uintptr_t _unk32; // 0x4B4
+    uintptr_t _unk33; // 0x4B8
+    uintptr_t _unk34; // 0x4BC
+    uintptr_t _unk35; // 0x4C0
 
     EditorUI* editorUI; // 0x4C4
     cocos2d::CCSprite* BGLayer; // 0x4C8
