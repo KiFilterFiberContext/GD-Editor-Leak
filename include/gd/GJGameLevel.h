@@ -5,7 +5,7 @@
 class GJGameLevel : public cocos2d::CCNode 
 {
 public:
-    uint32_t _pad0[ 3 ];
+    uint64_t _pad0[ 1 ];
     std::string* lastBuildSave_;
     int levelIDRand_;
     int levelIDSeed_;
