@@ -42,6 +42,9 @@ struct trap_info_t
 
 	void* callback;
 
+        //
+        // thumb instructions are two bytes
+	//
 	uint8_t instruction[ 4 ];
 };
 
@@ -240,6 +243,9 @@ namespace photon::core
 			sigemptyset( &sa.sa_mask );
 			sa._u._sa_sigaction = handler;
 
+			//
+			// emulators that JIT compile ARM may produce different signals that may differ from real hardware
+			//
 			sigaction( SIGTRAP, ( struct sigaction* ) &sa, nullptr );
 			sigaction( SIGILL, ( struct sigaction* ) &sa, nullptr );
 
