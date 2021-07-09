@@ -37,11 +37,12 @@
 #include <MenuLayer.h>
 
 // C signal handlers cannot access static/global variables because it's UB
+// update from 2021: workaround
 
 //
 // july 1 2021 
 // most routines and extra functionality has been significantly updated since then
-// it will not consist of neat and orderly code and will be BAD
+// it will not consist of neat and orderly code and require some rewriting for it to work
 //
 
 /*
