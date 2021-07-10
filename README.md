@@ -4,7 +4,7 @@ This repository contains reverse engineered structures and reimplemented editor 
 
 ## Features
 - At its current state, the reverse engineered structures are not fully documented.  They only contain the __BARE MINIMUM__ for the editor to function and **do not** contain more recent additions or structures since then.  Do not expect it to be stable as the leaks are incomplete and contain missing implementation details leading to frequent crashes without further modifications.  
-- It also contains relevant code for supporting software breakpoints on ARM processors to allow inspecting of register contents and instruction-level trapping (hooks)
+- It also contains relevant code for supporting [software breakpoints on ARM](https://github.com/encls/photon)
 
 ## Details
 Geometry Dash is a semi-platformer game published by RobTop Games in 2013.  It was initially released on iOS and Android, then published to Steam in 2014.  The game consists of the player controlling a square in a horizontal platformer along with multiple game modes, icons and more.  The most notable feature is the editor, which allows sharing user made levels onto the servers.
