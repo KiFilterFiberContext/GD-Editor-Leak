@@ -4,8 +4,8 @@ This repository contains reverse engineered structures and reimplemented editor 
 
 ## Features
 - At its current state, the reverse engineered structures are not fully documented.  They only contain the __BARE MINIMUM__ for the editor to function and **do not** contain more recent additions or structures since then.  Do not expect it to be stable as the leaks are incomplete and contain missing implementation details leading to frequent crashes without further modifications.  
-- It also contains relevant code for supporting software breakpoints on ARM processors to allow inspecting of register contents and individual instruction traps (hooks)
-- 
+- It also contains relevant code for supporting software breakpoints on ARM processors to allow inspecting of register contents and instruction-level trapping (hooks)
+
 ### Disclaimer
 - The code has not been touched in a while and is outdated compared to recent additions in previous months
 - I am not the owner of Geometry Dash nor am I affiliated with RobTop Games.  RobTop has publicly acknowledged the existence of the restoration and any action taken by him will be respected following publication.  
