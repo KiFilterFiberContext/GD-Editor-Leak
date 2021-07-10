@@ -71,6 +71,9 @@ namespace photon::core
 {
 	struct softbp
 	{
+		//
+		// support was planned for aarch64 hardware breakpoints before abandoning the project
+		//
 		static constexpr inline uint8_t AARCH64_BKPT[] = { 0x00, 0x00, 0x20, 0xD4 };	// BRK #0
 		static constexpr inline uint8_t ARM_THUMB_BKPT[ ] = { 0x1, 0xDE };		// UDF #1
 		static constexpr inline uint8_t ARM_BKPT[ ] = { 0xF1, 0x00, 0xF0, 0xE7 };	// UDF #1
@@ -261,6 +264,10 @@ namespace photon::core
 			hook_list.prev_index = -1;
 			hook_list.active = false;
 
+			//
+			// reapply software breakpoint once signaled
+			// probably should use thread synchronization primitives
+			//
 			pthread_t tid;
 			pthread_create( &tid, nullptr, hook_watchdog, nullptr );
 		}
