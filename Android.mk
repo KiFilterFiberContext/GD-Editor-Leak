@@ -10,7 +10,7 @@ include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := saber
+LOCAL_MODULE := photon
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/include/ $(LOCAL_PATH)/include/core/ $(LOCAL_PATH)/include/cocos2d_x/ $(LOCAL_PATH)/include/gd/
 
 LOCAL_SRC_FILES:= src/main.cpp
