@@ -183,8 +183,10 @@ void onmoregames_hk( MenuLayer* ptr, cocos2d::CCObject* selector )
     FLAlertLayer::create( nullptr, "Stack Trace", ss.str(), "Exit", nullptr, 450., true, 300. )->show( );
 }
 
-
-bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
+//
+// the heart of the project
+//
+bool editorinit_callback( LevelEditorLayer* ptr, GJGameLevel* level )
 {
     if( !dynamic_cast< GJBaseGameLayer* >( ptr )->init( ) )
         return false;
@@ -195,8 +197,15 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     auto gm = GameManager::sharedState( );
     gm->inEditor_ = true;
 
+    //
+    // interestingly some features (i.e. autodraw) aren't implemented anywhere
+    // also another game variable for multiplayer?
+    //
     ptr->smoothFix = gm->getGameVariable( "0102" );
 
+    // 
+    // there is a dedicated function for this, however, it crashes upon invocation
+    //
     ptr->ignoreDamage = gm->getGameVariable( "0009" );
     ptr->followPlayer = gm->getGameVariable( "0001" );
     ptr->drawTriggerBoxes = gm->getGameVariable( "0044" );
@@ -218,8 +227,14 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->level = level;
     gm->editorLayer = ptr;
     
+    //
+    // everything using the create method is autoreleased once it is out of scope
+    //
     ptr->level->retain( );
 
+    //
+    // best part was finding all the new offsets 
+    //
     ptr->stickyObjectDict_ = CCDictionary::create( );
     ptr->stickyObjectDict_->retain( );
 
@@ -289,7 +304,9 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->crashThing = CCArray::create( );
     ptr->crashThing->retain( );
 
+    //
     // new members from 2.2
+    //
     ptr->someArray14 = CCArray::create();
     ptr->someArray14->retain();
 
@@ -299,8 +316,9 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->collisionBlocks_ = CCArray::create();
     ptr->collisionBlocks_->retain();
 
-    // vectors
-
+    //
+    // vectors (group limit raised to 9999)
+    //
     ptr->objectVector_.reserve(9999);
     ptr->nestedArray1.reserve(9999);
     ptr->allGroupsToggled.reserve(9999);
@@ -314,7 +332,7 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->other5.reserve(9999);
     ptr->groupPreviewV.reserve(9999);
 
-    for ( int i = 0; i < 9999; i++ )
+    for ( size_t i = 0; i < 9999; i++ )
     {
         ptr->objectVector_[i] = nullptr;
         ptr->nestedArray1[i] = nullptr;
@@ -336,8 +354,7 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->obb2d->retain( );
 
     // 
-    // july 2021
-    // not sure what I intended to do here
+    // unknown initialization
     //
     ptr->drawNodes_ = new int[ 0xC80 ]; 
 
@@ -385,7 +402,6 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->dCross->setScale( 0.7 );
     
     //
-    // july 2021
     // weird workaround for issue I encountered
     //
     std::string a = ZipUtils::decompressString( std::string( (char*) ptr->level->levelString_ ), false, 11 );
@@ -406,6 +422,9 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
         ptr->settingsObject_->retain( );
     } 
 
+    //
+    // ColorAction in 2.0 is in the header
+    //
     auto c_action1 = ptr->settingsObject_->effectManager->getColorAction( 0x3ED );
     c_action1->thing1 = 0;
     c_action1->thing5 = 1;
@@ -429,6 +448,7 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
 
     ptr->levelSettingsUpdated( );
     
+    //
     // updateEditorMode will crash the game if it is called
     // ptr->updateEditorMode( );
     //
@@ -453,6 +473,10 @@ CreateMenuItem* gameobjcreate_hk( EditorUI* ptr, int key, int btn_type )
     return ptr->getCreateBtn( 1, btn_type );
 }
 
+//
+// poor code practices that can be easily fixed with instruction trapping 
+// or even just not using unprotected globals
+//
 bool isGauntlet = true;
 
 #include "CCSpriteFrameCache.h"
@@ -484,7 +508,6 @@ bool spritecachename_hk( CCSprite* ptr, const char* s )
         return ptr->initWithSpriteFrameName( "GJ_moreGamesBtn_001.png" );
 
     // 
-    // july 2021
     // not recommended
     // you can trap individual instructions with the newer framework
     //
@@ -514,6 +537,10 @@ const char* loading_hk( CCLayer* ptr )
     GM->setGameVariable( "0115", true ); // FPS Label
     GM->setGameVariable( "0109", true ); // PlayLayer infoLabel
     GM->setHasRatingPower( 2 );
+    
+    //
+    // there are numerous other undocumented game variables in 2.2
+    //
     
     return "Mod developed by Blaze";
 }
