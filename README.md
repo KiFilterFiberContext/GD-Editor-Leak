@@ -1,6 +1,11 @@
 # Geometry Dash 2.2 Leak Editor 
 This repository contains reverse engineered structures and reimplemented editor code needed for my restoration of the editor in the 2019 Geometry Dash 2.2 leaks
 
+
+## Features
+- At its current state, the reverse engineered structures are not fully documented.  They only contain the __BARE MINIMUM__ for the editor to function and **do not** contain more recent additions or structures since then.  Do not expect it to be stable as the leaks are incomplete and contain missing implementation details leading to frequent crashes without further modifications.  
+- It also contains relevant code for supporting software breakpoints on ARM processors to allow inspecting of register contents and individual instruction traps (hooks)
+- 
 ### Disclaimer
 - The code has not been touched in a while and is outdated compared to recent additions in previous months
 - I am not the owner of Geometry Dash nor am I affiliated with RobTop Games.  RobTop has publicly acknowledged the existence of the restoration and any action taken by him will be respected following publication.  
@@ -21,10 +26,6 @@ The leak included many new features, yet some features were stripped from the re
 Desite attempts from collaborating members of the programming and reverse engineering community, hopes of restoring the editor was lost due to the daunting task of having to reverse engineer and accurately rewrite parts of the editor layer.  After a year, I decided to single-handedly reverse engineer the [editor](https://www.youtube.com/watch?v=JzAEiaySqTM). 
 
 Initial reverse engineering was done by bindiffing the leaked lite binary against the 2017 SubZero and 2.0 binaries.  I tracked all modifications and proceeded to perform analysis on any changes made on member offsets and additions to the editor structure.  After support from various people from the community after providing assets, the editor was now functional.  It still lacks full reimplementation, however, due to the requirement of it needing to be fully compatible with other editor routines in order for it to run, it can be considered as a near full recreation of the initialization routine.  Due to some missing textures and other additions, some modifications had to be done for compatibility.
-
-## Features
-- At its current state, the reverse engineered structures are not fully documented.  They only contain the __BARE MINIMUM__ for the editor to function and **do not** contain more recent additions or structures since then.  Do not expect it to be stable as the leaks are incomplete and contain missing implementation details leading to frequent crashes without further modifications.  
-- It also contains relevant code for supporting software breakpoints on ARM processors to allow inspecting of register contents and individual instruction traps (hooks)
 
 ## History Credits
 - [Geometry Dash Unofficial Wiki](https://geometry-dash.fandom.com/wiki/Update_2.2)
