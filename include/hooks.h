@@ -95,7 +95,7 @@ bool menuinit_hk(MenuLayer* ptr)
 
     auto menu = CCMenu::create( );
     auto btn = CCMenuItemSpriteExtra::create(
-        ButtonSprite::create( "Support!", 0.35 ),
+        ButtonSprite::create( "Support Redacted!", 0.35 ),
         nullptr,
         ptr,
         menu_selector(MenuLayerExt::OnBlaze)
@@ -108,7 +108,6 @@ bool menuinit_hk(MenuLayer* ptr)
     return m;
 }
 
-bool (*cctouch)(UILayer*, cocos2d::CCTouch*, cocos2d::CCEvent*);
 bool cctouch_hk(UILayer* ptr, cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
     auto t = ptr->ccTouchBegan( pTouch, pEvent );
@@ -121,7 +120,6 @@ bool cctouch_hk(UILayer* ptr, cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent
     return t;
 }
 
-bool (*touchend)(UILayer*, cocos2d::CCTouch*, cocos2d::CCEvent*);
 void touchend_hk(UILayer* ptr, cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
     ptr->ccTouchEnded( pTouch, pEvent );
@@ -139,7 +137,6 @@ void touchend_hk(UILayer* ptr, cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEven
 #include "CCActionInterval.h"
 #include "CCActionInstant.h"
 
-void (*exitEdit)(PauseLayer*);
 void exitEdit_hk( PauseLayer* ptr )
 {
     auto pl = GM->playLayer;
@@ -149,7 +146,7 @@ void exitEdit_hk( PauseLayer* ptr )
     pl->unscheduleAllSelectors();
     GSM->stopBackgroundMusic();
 
-     auto dir = cocos2d::CCDirector::sharedDirector();
+    auto dir = cocos2d::CCDirector::sharedDirector();
     dir->getScheduler()->_fTimeScale = 1;
 
     pl->removeAllObjects();
@@ -292,7 +289,7 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->crashThing = CCArray::create( );
     ptr->crashThing->retain( );
 
-    // new 2.2
+    // new members from 2.2
     ptr->someArray14 = CCArray::create();
     ptr->someArray14->retain();
 
@@ -302,7 +299,7 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->collisionBlocks_ = CCArray::create();
     ptr->collisionBlocks_->retain();
 
-    // vectors :L
+    // vectors
 
     ptr->objectVector_.reserve(9999);
     ptr->nestedArray1.reserve(9999);
@@ -486,6 +483,11 @@ bool spritecachename_hk( CCSprite* ptr, const char* s )
     if( !strcmp( s, "GJ_freeLevelsBtn_001.png" )  )
         return ptr->initWithSpriteFrameName( "GJ_moreGamesBtn_001.png" );
 
+    // 
+    // july 2021
+    // not recommended
+    // you can trap individual instructions with the newer framework
+    //
     if ( !strcmp( s, "GJ_gauntletsBtn_001.png" ) )
     {
         if( !isGauntlet )
