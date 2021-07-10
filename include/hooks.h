@@ -338,6 +338,10 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->obb2d = OBB2D::create( CCPoint( 1, 1 ), 1.0, 1.0, 0.0 ); 
     ptr->obb2d->retain( );
 
+    // 
+    // july 2021
+    // not sure what I intended to do here
+    //
     ptr->drawNodes_ = new int[ 0xC80 ]; 
 
     dynamic_cast< GJBaseGameLayer* >( ptr )->setupLayers( );
@@ -383,7 +387,10 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->dCross->setVisible( false ); // false
     ptr->dCross->setScale( 0.7 );
     
-    // LOGD("LEVEL STRING: %s", (char*) ptr->level->levelString_);
+    //
+    // july 2021
+    // weird workaround for issue I encountered
+    //
     std::string a = ZipUtils::decompressString( std::string( (char*) ptr->level->levelString_ ), false, 11 );
     ptr->oldLevelString_ = new std::string( a );
 
@@ -424,7 +431,10 @@ bool editorinit_hk( LevelEditorLayer* ptr, GJGameLevel* level )
     ptr->sortStickyGroups( );
 
     ptr->levelSettingsUpdated( );
+    
+    // updateEditorMode will crash the game if it is called
     // ptr->updateEditorMode( );
+    //
 
     ptr->schedule( schedule_selector( LevelEditorLayer::updateVisibility ), 0.05 );
     ptr->schedule( schedule_selector( LevelEditorLayer::updateGround ) );
@@ -452,9 +462,6 @@ bool isGauntlet = true;
 
 bool spritecachename_hk( CCSprite* ptr, const char* s )
 {
-    saber::logging::log("SPRITE: %s", s );
-
-/*
     if ( !strcmp( s, "pixelb_03_01_color_001.png" ) )
         return ptr->initWithSpriteFrameName( "pixelb_03_01_001.png" );
 
@@ -491,27 +498,24 @@ bool spritecachename_hk( CCSprite* ptr, const char* s )
             return ptr->initWithSpriteFrameName( "GJ_gauntletsBtn_001.png" );
         }
     }
-*/
+    
     return ptr->initWithSpriteFrameName( s );
 }
 
-bool (*unlocked)(void*, int, int);
 bool unlocked_hk(void* ptr, int a1, int a2)
 {
     return true;
 }
 
-const char* (*loading)(cocos2d::CCLayer*);
 const char* loading_hk( CCLayer* ptr )
 {
     GM->setGameVariable( "0115", true ); // FPS Label
     GM->setGameVariable( "0109", true ); // PlayLayer infoLabel
-    // GM->setHasRatingPower( 2 );
+    GM->setHasRatingPower( 2 );
     
     return "Mod developed by Blaze";
 }
 
-void (*dict)( CCDictionary*, CCObject*, int);
 void dict_hk( cocos2d::CCDictionary* d, CCObject* obj, int key )
 {
     switch( key )
@@ -543,7 +547,6 @@ void dict_hk( cocos2d::CCDictionary* d, CCObject* obj, int key )
     }
 }
 
-void (*ISetup)(PauseLayer*);
 void pausesetup_hk( PauseLayer* ptr )
 {
     ptr->customSetup( );
@@ -594,7 +597,6 @@ void pausesetup_hk( PauseLayer* ptr )
 
 }
 
-bool (*levelinfoinit)( LevelInfoLayer*, GJGameLevel*, bool );
 bool levelinfoinit_hk( LevelInfoLayer* ptr, GJGameLevel* level, bool a3 )
 {
     auto r = levelinfoinit( ptr, level, a3 );
@@ -619,7 +621,6 @@ bool levelinfoinit_hk( LevelInfoLayer* ptr, GJGameLevel* level, bool a3 )
 
 #include "CreatorLayer.h"
 
-bool (*world)( CreatorLayer* );
 bool world_hk( CreatorLayer* ptr ) 
 {
     auto r = ptr->init( );
@@ -645,7 +646,6 @@ bool world_hk( CreatorLayer* ptr )
 }
 
 #include "EditorPauseLayer.h"
-void (*updateOptions)(EditorPauseLayer*, CCObject*);
 void updateoptions_hk( EditorPauseLayer* self, CCObject* ref )
 {
     if ( self->inEditor_ )
@@ -705,12 +705,9 @@ static const std::map<const char*, int> btnMapping = {
 #include "EditButtonBar.h"
 #include "CreateMenuItem.h"
 
-ObjectToolbox* (*toolbox)( );
 ObjectToolbox* toolbox_hk( )
 {
-    // LOGD("HOW2");
-
-    auto tb = toolbox( );
+    auto tb = ObjectToolbox::sharedState( );
 
     for ( const auto [ texture, objectID ] : btnMapping )
     {
@@ -721,21 +718,10 @@ ObjectToolbox* toolbox_hk( )
     return tb;
 }
 
-CreateMenuItem* (*buttonBar)( EditorUI*, int, cocos2d::CCArray* );
 CreateMenuItem* buttonBar_hk( EditorUI* editor, int id, cocos2d::CCArray* objectArray )
 {
     for ( const auto [ texture, objectID ] : btnMapping )
         objectArray->addObject( editor->getCreateBtn( objectID, 4 ) );
 
     return editor->getCreateBtn( id, 4 );
-}
-
-
-
-void (*clippingRect)( GLint, GLint, GLsizei, GLsizei );
-void clippingrect_hk( GLint x, GLint y, GLsizei width, GLsizei height )
-{
-    // LOGD( "SIZE: (%i, %i, %i, %i)", x, y, width, height );
-    auto addr = ( void (*)(GLint, GLint, GLsizei, GLsizei ) ) vm::get_proc_addr("libcocos2dcpp.so", "glScissor");
-    addr( x, y, 1000, 1000 );
 }
