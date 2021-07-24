@@ -467,64 +467,122 @@ inline long mid_num(const std::string& s) {
     return std::strtol(&s[s.find('_') + 1], nullptr, 10);
 }
 
-CreateMenuItem* gameobjcreate_hk( EditorUI* ptr, int key, int btn_type )
+GameObject* create_hk( int key )
 {
-    saber::logging::log("ID: %i", key);
-    return ptr->getCreateBtn( 1, btn_type );
+    auto tb = ObjectToolbox::sharedState( )->intKeyToFrame( key );
+
+    // LOGD("GAMEOBJECT: %s", tb);
+    if( strstr(tb, "pixelart") != NULL && strstr(tb, "b_001") == NULL )
+    {
+        auto pixelKey = mid_num( tb );
+        // LOGD("ART: %i", pixelKey);
+
+        return old4( pixelKey > 38 ? 1 : key );
+    }
+
+    if( !strcmp( tb, "pixelb_03_01_001.png" ) )
+        return old4( 1 );
+
+    if ( !strcmp( tb, "pixelb_03_02_001.png" ) )
+        return old4( 1 );
+
+
+    if( strstr( tb, "gdh" ) != NULL 
+    || strstr( tb, "fireball" ) != NULL 
+    || strstr( tb, "fire_b" ) != NULL 
+    || strstr( tb, "gj22_anim" ) != NULL 
+    || strstr( tb, "pixel" ) != NULL 
+    || strstr( tb, "gjHand2" ) != NULL )
+        return old4( 1 );
+
+    auto o = old4( key );
+
+    return o;
 }
 
-//
-// poor code practices that can be easily fixed with instruction trapping 
-// or even just not using unprotected globals
-//
-bool isGauntlet = true;
+bool isGauntlet = false;
+
+#include "CCSpriteFrameCache.h"
+GameObject* create_hk( int key )
+{
+    auto tb = ObjectToolbox::sharedState( )->intKeyToFrame( key );
+
+    // LOGD("GAMEOBJECT: %s", tb);
+    if( strstr(tb, "pixelart") != NULL && strstr(tb, "b_001") == NULL )
+    {
+        auto pixelKey = mid_num( tb );
+        // LOGD("ART: %i", pixelKey);
+
+        return old4( pixelKey > 38 ? 1 : key );
+    }
+
+    if( !strcmp( tb, "pixelb_03_01_001.png" ) )
+        return old4( 1 );
+
+    if ( !strcmp( tb, "pixelb_03_02_001.png" ) )
+        return old4( 1 );
+
+
+    if( strstr( tb, "gdh" ) != NULL 
+    || strstr( tb, "fireball" ) != NULL 
+    || strstr( tb, "fire_b" ) != NULL 
+    || strstr( tb, "gj22_anim" ) != NULL 
+    || strstr( tb, "pixel" ) != NULL 
+    || strstr( tb, "gjHand2" ) != NULL )
+        return old4( 1 );
+
+    auto o = old4( key );
+
+    return o;
+}
+
+bool isGauntlet = false;
 
 #include "CCSpriteFrameCache.h"
 
-bool spritecachename_hk( CCSprite* ptr, const char* s )
+CCSpriteFrame* (*old5)(CCSpriteFrameCache*, const char*) = nullptr;
+CCSpriteFrame* sprite_hk( CCSpriteFrameCache* ptr, const char* s )
 {
+    // LOGD("SPRITE: %s", s);
+
     if ( !strcmp( s, "pixelb_03_01_color_001.png" ) )
-        return ptr->initWithSpriteFrameName( "pixelb_03_01_001.png" );
+        return old5( ptr, "pixelb_03_01_001.png" );
 
     if ( !strcmp( s, "pixelb_03_02_color_001.png" ) )
-        return ptr->initWithSpriteFrameName( "pixelb_03_02_001.png" );
+        return old5( ptr, "pixelb_03_02_001.png" );
 
     if ( !strcmp( s, "pixelart_045_color_001.png" ) )
-        return ptr->initWithSpriteFrameName( "pixelart_045_001.png" );
+        return old5( ptr, "pixelart_045_001.png" );
 
     if ( !strcmp( s, "pixelart_016_color_001.png" ) )
-        return ptr->initWithSpriteFrameName( "pixelart_016_001.png" );
+        return old5( ptr, "pixelart_016_001.png" );
 
     if ( !strcmp( s, "pixelart_044_color_001.png" ) )
-        return ptr->initWithSpriteFrameName( "pixelart_044_001.png" );
+        return old5( ptr, "pixelart_044_001.png" );
 
     if( !strcmp( s, "GJ_fullBtn_001.png" )  )
-        return ptr->initWithSpriteFrameName( "GJ_creatorBtn_001.png" );
-    
+        return old5( ptr, "GJ_creatorBtn_001.png" );
+
     if( !strcmp( s, "GJ_freeStuffBtn_001.png" )  )
-        return ptr->initWithSpriteFrameName( "GJ_dailyRewardBtn_001.png" );
+        return old5( ptr, "GJ_dailyRewardBtn_001.png" );
 
     if( !strcmp( s, "GJ_freeLevelsBtn_001.png" )  )
-        return ptr->initWithSpriteFrameName( "GJ_moreGamesBtn_001.png" );
+        return old5( ptr, "GJ_moreGamesBtn_001.png" );
 
-    // 
-    // not recommended
-    // you can trap individual instructions with the newer framework
-    //
     if ( !strcmp( s, "GJ_gauntletsBtn_001.png" ) )
     {
         if( !isGauntlet )
         {
             isGauntlet = true;
-            return ptr->initWithSpriteFrameName( "GJ_versusBtn_001.png" );
+            return old5( ptr, "GJ_versusBtn_001.png" );
         }
         {
             isGauntlet = false;
-            return ptr->initWithSpriteFrameName( "GJ_gauntletsBtn_001.png" );
+            return old5( ptr, "GJ_gauntletsBtn_001.png" );
         }
     }
-    
-    return ptr->initWithSpriteFrameName( s );
+
+    return old5( ptr, s );
 }
 
 bool unlocked_hk(void* ptr, int a1, int a2)
