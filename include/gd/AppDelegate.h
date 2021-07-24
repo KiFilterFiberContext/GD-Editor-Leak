@@ -36,4 +36,4 @@ public:
 
 	virtual void trySaveGame( void );
 	virtual void willSwitchToScene( cocos2d::CCScene* p_scene );
-} __attribute__( (aligned( 4 )) );;
+} __attribute__( (aligned( 4 )) );
