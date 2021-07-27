@@ -36,37 +36,55 @@ enum
 	kCCNodeOnCleanup
 };
 
-class CC_DLL CCNode : public CCObject
+//
+// size == 0xF8
+//
+class CC_DLL __attribute__( (aligned( 4 )) ) CCNode : public CCObject
 {
 public:
-	float _fRotationX, _fRotationY;
-	float _fScaleX, _fScaleY;
-	float _fVertexZ;
-	CCPoint _obPosition;
-	float _fSkewX, _fSkewY;
-	CCPoint _obAnchorPointInPoints, _obAnchorPoint;
-	CCSize _obContentSize;
-	CCAffineTransform _sAdditionalTransform, _sTransform, _sInverse;
-	CCCamera *_pCamera;
-	CCGridBase *_pGrid;
-	int _nZOrder;
-	CCArray *_pChildren;
-	CCNode *_pParent;
-	void *_pUserData;
-	CCObject *_pUserObject;
-	CCGLProgram *_pShaderProgram;
-	ccGLServerState _eGLServerState;
-	unsigned int _uOrderOfArrival;
-	CCScheduler *_pScheduler;
-	CCActionManager *_pActionManager;
-	bool _bRunning;
-	bool _bTransformDirty, _bInverseDirty, _bAdditionalTransformDirty;
-	bool _bVisible;
-	bool _bIgnoreAnchorPointForPosition;
-	bool _bReorderChildDirty;
-	int _nScriptHandler, _nUpdateScriptHandler;
-	int _eScriptType;
-	CCComponentContainer *_pComponentContainer;
+	float m_fRotationX;
+	float m_fRotationY;
+	float m_fScaleX;
+	float m_fScaleY;
+	float m_vertexZ;
+	cocos2d::CCPoint m_position;
+	float m_fSkewX;
+	float m_fSkewY;
+	cocos2d::CCPoint m_obAnchorPointInPoints;
+	cocos2d::CCPoint m_obAnchorPoint;
+	cocos2d::CCSize m_obContentSize;
+	CCAffineTransform m_sAdditionalTransform;
+	unsigned char gap74[ 48 ];
+	cocos2d::CCCamera* m_pCamera;
+	cocos2d::CCGridBase* m_grid;
+	int m_ZOrder;
+	cocos2d::CCArray* m_pChildren;
+	cocos2d::CCNode* m_parent;
+	void* m_userData;
+	cocos2d::CCObject* m_userObject;
+	cocos2d::CCGLProgram* m_pShaderProgram;
+	ccGLServerState m_eGLServerState;
+	unsigned int m_orderOfArrival;
+	cocos2d::CCScheduler* m_scheduler;
+	cocos2d::CCActionManager* m_pActionManager;
+	bool m_bRunning;
+	bool m_bTransformDirty;
+	char byteD6;
+	char field_D7;
+	int field_D8;
+	int field_DC;
+	char m_bInverseDirty;
+	char m_bAdditionalTransformDirty;
+	bool m_visible;
+	char m_bIgnoreAnchorPointForPosition;
+	char m_bReorderChildDirty;
+	char field_E5;
+	char field_E6;
+	char field_E7;
+	int field_E8;
+	int m_nScriptHandler;
+	int m_eScriptType;
+	cocos2d::CCComponentContainer* m_pComponentContainer;
 
 public:
 	CCNode();

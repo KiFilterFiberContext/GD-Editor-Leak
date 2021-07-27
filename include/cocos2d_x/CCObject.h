@@ -23,16 +23,18 @@ public:
 	virtual CCObject *copyWithZone(CCZone *pZone);
 };
 
+// size 0x20
 class CC_DLL CCObject : public CCCopying
 {
 public:
-	unsigned int _uID;
-	int _nLuaID;
-	int _nTag;
-	unsigned int _uReference;
-	unsigned int _uAutoReleaseCount;
-	CCObjectType _eObjType;
-	int _unk0; //TODO: Rename last argument in CCObject
+	int m_uID;
+	unsigned int m_nLuaID;
+	int m_tag;
+	unsigned int m_uReference;
+	CCObjectType m_ObjType;
+	int m_unk;
+	unsigned int m_uAutoReleaseCount;
+
 
 public:
 	CCObject();

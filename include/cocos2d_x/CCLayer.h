@@ -21,14 +21,30 @@ typedef enum
 class CCTouchScriptHandlerEntry;
 class CCScriptHandlerEntry;
 
+//
+// size == 0x128
+//
 class CC_DLL CCLayer : public CCNode, public CCTouchDelegate, public CCAccelerometerDelegate, public CCKeypadDelegate, public CCKeyboardDelegate, public CCMouseDelegate
 {
 public:
-	bool _bTouchEnabled, _bAccelerometerEnabled, _bKeypadEnabled, _bKeyboardEnabled, _bMouseEnabled;
-	CCTouchScriptHandlerEntry *_pScriptTouchHandlerEntry;
-	CCScriptHandlerEntry *_pScriptKeypadHandlerEntry, *_pScriptAccelerateHandlerEntry;
-	int _nTouchPriority;
-	ccTouchesMode _eTouchMode;
+	/*
+	cocos2d::CCTouchDelegate* m_touchDelegate;
+	cocos2d::CCAccelerometerDelegate* m_accelerometerDelegate;
+	cocos2d::CCKeypadDelegate* m_keypadDelegate;
+	cocos2d::CCKeyboardDelegate* m_keyboardDelegate;
+	cocos2d::CCMouseDelegate* m_mouseDelegate;
+	*/
+
+	bool m_bTouchEnabled;
+	bool m_bAccelerometerEnabled;
+	bool m_bKeypadEnabled;
+	bool m_bKeyboardEnabled;
+	bool m_bMouseEnabled;
+	cocos2d::CCTouchScriptHandlerEntry* m_ScriptTouchHandlerEntry;
+	cocos2d::CCScriptHandlerEntry* m_ScriptKeypadHandlerEntry;
+	cocos2d::CCScriptHandlerEntry* m_ScriptAccelerateHandlerEntry;
+	int m_touchPriority;
+	ccTouchesMode m_eTouchMode;
 
 public:
 	CCLayer();
@@ -53,9 +69,6 @@ public:
 	virtual void onEnter();
 	virtual void onEnterTransitionDidFinish();
 	virtual void onExit();
-
-	// necessary for UILayer::ccTouchBegan
-	//
 
 	virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
 	virtual void ccTouchMoved(CCTouch *pTouch, CCEvent *pEvent);
