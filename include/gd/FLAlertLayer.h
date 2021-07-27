@@ -5,9 +5,7 @@
 #include "CCNode.h"
 
 #include "ButtonSprite.h"
-
-class FLAlertLayerProtocol { };
-
+#include "FLAlertLayerProtocol.h"
 
 class FLAlertLayer : public cocos2d::CCLayerColor
 {

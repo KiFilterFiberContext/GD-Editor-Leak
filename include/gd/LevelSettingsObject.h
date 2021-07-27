@@ -4,42 +4,44 @@
 #include "GJGameLevel.h"
 #include "GJEffectManager.h"
 
-
+// size 0x140
 class LevelSettingsObject : public cocos2d::CCNode
 {
 public:
-  uint8_t _pad[0x0C];
-  GJEffectManager *effectManager; // 0xF4
-  int startMode_;
-  int startSpeed_;
-  bool startMiniMode_;
-  bool startDualMode_;
-  bool twoPlayerMode_;
-  bool platformerMode_; // 0x107
-  float songOffset;
-  bool fadeIn_;
-  bool fadeOut_;
-  bool gap10E[2];
-  int BGIdx_;
-  int GIdx_;
-  int fontIdx_;
-  bool isLimited_;
-  bool gravityFlipped_;
-  bool byte11E;
-  bool byte11F;
-  int dword120;
-  GJGameLevel *gameLevel;
-  std::string songString_;
-  bool byte12C;
-  bool gap12D[3];
-  int lastColorPage_;
-  int GLineIdx_;
-  bool byte138;
-  bool isVisible_;
+    GJEffectManager* colorManager_; // 0xF8
+    int startMode_;
+    int startSpeed_;
+    bool miniMode_;
+    bool startDualMode_;
+    bool twoPlayerMode_;
+    bool startPlatformerMode_;
+    float songOffset_;
+    bool fadeIn_;
+    bool fadeOut_;
+    bool gap10E[ 2 ];
+    int BGIdx_;
+    int GIdx_;
+    int fontIdx_;
+    int BG2Idx_;
+    bool isStartPos_;
+    bool gravityFlipped_;
+    bool reversePlayer_;
+    bool byte123;
+    int dword124;
+    GJGameLevel* gameLevel_;
+    std::string guidelines_;
+    bool byte130;
+    bool gap131[ 3 ];
+    int lastColorPage_;
+    int GLineIdx_;
+    bool byte13C;
+    bool isVisible_;
 
 public:
     LevelSettingsObject();
     virtual ~LevelSettingsObject();
 
     static LevelSettingsObject* create( );
+
+    virtual bool init( void );
 };

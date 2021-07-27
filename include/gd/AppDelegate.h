@@ -3,7 +3,7 @@
 #include "CCApplication.h"
 #include "CCScene.h"
 
-class AppDelegate : public cocos2d::CCApplication, cocos2d::CCSceneDelegate
+class __attribute__(( aligned( 4 ) )) AppDelegate : public cocos2d::CCApplication, cocos2d::CCSceneDelegate
 {
 public:
 	bool setupGLView_;
@@ -36,4 +36,4 @@ public:
 
 	virtual void trySaveGame( void );
 	virtual void willSwitchToScene( cocos2d::CCScene* p_scene );
-} __attribute__( (aligned( 4 )) );
+};
