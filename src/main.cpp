@@ -45,80 +45,6 @@ bool ex_callback( LoadingLayer* p, bool useDefault )
 	return p->init( useDefault );
 }
 
-bool replay_callback( LevelInfoLayer* p, GJGameLevel* level, bool isGauntletSpecial )
-{
-	bool result = p->init( level, isGauntletSpecial );
-
-	auto pos = CCDirector::sharedDirector()->getWinSize();
-
-	auto menu = cocos2d::CCMenu::create( );
-	p->addChild( menu, 100 );
-
-	auto playSprite = cocos2d::CCSprite::createWithSpriteFrameName( "GJ_playBtn2_001.png" );
-
-	playSprite->setScale( 0.5 );
-
-	auto replayBtn = CCMenuItemSpriteExtra::create(
-		playSprite,
-		nullptr,
-		p,
-		menu_selector( LevelInfoLayer::onPlayReplay )
-	);
-	
-	menu->addChild( replayBtn );
-	menu->setPosition( ( pos.width / 2) + 90, (pos.height / 2) + 55 );
-
-	auto menu2 = CCMenu::create( );
-	p->addChild( menu2, 100 );
-
-	auto featureSprite = CCSprite::createWithSpriteFrameName( "GJ_starBtnMod_001.png" );
-
-	auto featureBtn = CCMenuItemSpriteExtra::create(
-		featureSprite,
-		nullptr,
-		p,
-		menu_selector( LevelInfoLayer::onFeatured )
-	);
-
-	menu2->addChild( featureBtn );
-	menu2->setPosition( 30, (pos.height / 2) + 100 );
-
-	featureBtn->setColor( ccc3( 255, 255, 0 ) );
-
-	return result;
-}
-
-void feature_callback( LevelInfoLayer* p, CCObject* ref )
-{
-	if ( p->isInvalid_ )
-		return;
-
-	auto layer = LevelFeatureLayer::create( p->gameLevel_->levelID_ );
-	layer->show( );
-}
-
-bool levelsearch_callback( LevelSearchLayer* p )
-{
-	bool result = p->init( );
-
-	auto size = CCDirector::sharedDirector( )->getWinSize( );
-
-	auto menu = CCMenu::create( );
-	p->addChild( menu );
-
-	auto pos = menu->convertToNodeSpace( CCPoint( size.width / 2, (size.height / 2) + 30 ) );
-
-	auto starLabel = SearchButton::create( "GJ_longBtn04_001.png", "Star Award", 0.5, "GJ_sMagicIcon_001.png" );
-	auto starAward = CCMenuItemSpriteExtra::create(
-		starLabel, nullptr, p, menu_selector( LevelSearchLayer::onStarAward )
-	);
-
-	menu->addChild( starAward );
-	starAward->setPosition( pos + CCPoint( 0, -75 ) );
-
-	return result;
-}
-
 bool controller_callback( void* p )
 {
 	return false;
@@ -405,14 +331,11 @@ void phsdk_libmain( void )
 	debug_print( "**Loaded Library**\n\n" );
 	softbp::setup( softbp::sig_handler, false );
 
-    softbp::hook_with_entry( "_ZN16LevelEditorLayer4initEP11GJGameLevel", ( void* ) editor_callback );
-    photon::utils::do_inline_hook( "_ZN10GameObject13createWithKeyEi", gameobj_callback, &gameobj_ori );
-    photon::utils::do_inline_hook( "_ZN14EditLevelLayer6onEditEPN7cocos2d8CCObjectE", onedit_callback, &onedit_ori );
+	softbp::hook_with_entry( "_ZN16LevelEditorLayer4initEP11GJGameLevel", ( void* ) editor_callback );
+	photon::utils::do_inline_hook( "_ZN10GameObject13createWithKeyEi", gameobj_callback, &gameobj_ori );
+	photon::utils::do_inline_hook( "_ZN14EditLevelLayer6onEditEPN7cocos2d8CCObjectE", onedit_callback, &onedit_ori );
 
 	softbp::hook_with_entry( "_ZN12LoadingLayer4initEb", (void*) ex_callback );
-	softbp::hook_with_entry( "_ZN14LevelInfoLayer4initEP11GJGameLevelb", ( void* ) replay_callback );
-	softbp::hook_with_entry( "_ZN14LevelInfoLayer10onFeaturedEPN7cocos2d8CCObjectE", ( void* ) feature_callback );
-	softbp::hook_with_entry( "_ZN16LevelSearchLayer4initEv", ( void* ) levelsearch_callback );
 	softbp::hook_with_entry( "_ZN15PlatformToolbox21isControllerConnectedEv", ( void* ) controller_callback );	
 	softbp::hook_with_entry( "_ZN16GameStatsManager25hasCompletedGauntletLevelEi", ( void* ) unlocked_gauntlet_callback );
 }
