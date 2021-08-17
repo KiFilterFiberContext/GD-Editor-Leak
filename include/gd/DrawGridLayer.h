@@ -2,6 +2,8 @@
 
 #include "LevelEditorLayer.h"
 
+class LevelEditorLayer;
+
 class DrawGridLayer : public cocos2d::CCLayer
 {
 public:
