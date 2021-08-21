@@ -12,7 +12,7 @@ public:
     int levelID_;
     std::string levelName_;
     std::string levelDesc_;
-    std::string levelString_;
+    std::string* levelString_;
     std::string userName_;
     std::string recordString_;
     int dword11C;
