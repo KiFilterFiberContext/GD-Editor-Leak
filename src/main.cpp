@@ -29,6 +29,7 @@ using photon::utils::str_replace;
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+
 bool ex_callback( LoadingLayer* p, bool useDefault )
 {
 	auto gm = GameManager::sharedState( );
@@ -81,7 +82,6 @@ void onedit_callback( EditLevelLayer* p, CCObject* ref )
 GameObject* ( *gameobj_ori ) (int) = 0;
 GameObject* gameobj_callback( int key )
 {
-    // debug_print( "key: %i\n", key );
     auto tb = ObjectToolbox::sharedState( )->intKeyToFrame( key );
 
     if ( strstr( tb, "gdh" ) != NULL
@@ -107,11 +107,8 @@ bool editor_callback( LevelEditorLayer* p, GJGameLevel* level )
 
 	gm->editMode_ = true;
 
-    gm->setGameVariable( "0036", false ); // temporary fix for color mode
-
 	p->smoothFix_ = gm->getGameVariable( "0102" );
 	p->updateOptions( );
-
 
 	p->setObjectCount( 0 );
 	GSM->stopBackgroundMusic( );
@@ -280,10 +277,10 @@ bool editor_callback( LevelEditorLayer* p, GJGameLevel* level )
     p->dCross_->setVisible( false );
     p->dCross_->setScale( 0.7 );
 
-    std::string level_string = ZipUtils::decompressString( p->gameLevel_->levelString_, false, 11 );
-    p->levelString_ = level_string;
+    std::string a = ZipUtils::decompressString( std::string( ( char* ) p->gameLevel_->levelString_ ), false, 11 );
+    p->levelString_ = new std::string( a );
 
-    p->createObjectsFromSetup( level_string );
+    p->createObjectsFromSetup( a );
 
     dynamic_cast< GJBaseGameLayer* >( p )->createTextLayers( );
 
@@ -304,7 +301,6 @@ bool editor_callback( LevelEditorLayer* p, GJGameLevel* level )
     p->createGroundLayer( );
     p->gridLayer_->updateTimeMarkers( );
 
-    // todo: initialize background2 textures
     p->createBackground( );
     p->createBackground2( );
 
@@ -314,7 +310,7 @@ bool editor_callback( LevelEditorLayer* p, GJGameLevel* level )
     dynamic_cast< GJBaseGameLayer* >( p )->resetGroupCounters( false );
     p->sortStickyGroups( );
 
-    p->levelSettingsUpdated( );
+    // p->levelSettingsUpdated( );
     p->updateEditorMode( );
 
     p->schedule( schedule_selector( LevelEditorLayer::updateVisibility ), 0.05 );
@@ -331,9 +327,9 @@ void phsdk_libmain( void )
 	debug_print( "**Loaded Library**\n\n" );
 	softbp::setup( softbp::sig_handler, false );
 
-	softbp::hook_with_entry( "_ZN16LevelEditorLayer4initEP11GJGameLevel", ( void* ) editor_callback );
-	photon::utils::do_inline_hook( "_ZN10GameObject13createWithKeyEi", gameobj_callback, &gameobj_ori );
-	photon::utils::do_inline_hook( "_ZN14EditLevelLayer6onEditEPN7cocos2d8CCObjectE", onedit_callback, &onedit_ori );
+    softbp::hook_with_entry( "_ZN16LevelEditorLayer4initEP11GJGameLevel", ( void* ) editor_callback );
+    photon::utils::do_inline_hook( "_ZN10GameObject13createWithKeyEi", gameobj_callback, &gameobj_ori );
+    photon::utils::do_inline_hook( "_ZN14EditLevelLayer6onEditEPN7cocos2d8CCObjectE", onedit_callback, &onedit_ori );
 
 	softbp::hook_with_entry( "_ZN12LoadingLayer4initEb", (void*) ex_callback );
 	softbp::hook_with_entry( "_ZN15PlatformToolbox21isControllerConnectedEv", ( void* ) controller_callback );	
