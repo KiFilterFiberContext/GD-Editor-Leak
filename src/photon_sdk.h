@@ -40,8 +40,8 @@
 #include <map>
 #include <string>
 
-#include "engine/inlineHook.h"
+#include "core/inlineHook.h"
 
-#include "engine/mem.h"
-#include "engine/utils.h"
-#include "engine/softbp.h"
+#include "core/mem.h"
+#include "core/utils.h"
+#include "core/softbp.h"

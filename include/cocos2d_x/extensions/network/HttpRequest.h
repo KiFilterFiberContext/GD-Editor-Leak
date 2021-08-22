@@ -26,7 +26,7 @@
 #define __HTTP_REQUEST_H__
 
 #include "GDAPI_Macros.h"
-#include "ExtensionMacros.h"
+#include "../ExtensionMacros.h"
 
 NS_CC_EXT_BEGIN
 
