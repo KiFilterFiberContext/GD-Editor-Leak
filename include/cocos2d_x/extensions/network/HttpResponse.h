@@ -26,7 +26,7 @@
 #define __HTTP_RESPONSE__
 
 #include "GDAPI_Macros.h"
-#include "ExtensionMacros.h"
+#include "../ExtensionMacros.h"
 #include "HttpRequest.h"
 
 NS_CC_EXT_BEGIN

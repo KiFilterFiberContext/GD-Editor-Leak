@@ -26,7 +26,7 @@
 #ifndef __CCHTTPREQUEST_H__
 #define __CCHTTPREQUEST_H__
 
-#include "ExtensionMacros.h"
+#include "../ExtensionMacros.h"
 
 #include "HttpRequest.h"
 #include "HttpResponse.h"
