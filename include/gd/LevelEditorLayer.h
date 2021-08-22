@@ -76,7 +76,7 @@ public:
     char field_483;
     cocos2d::CCDictionary* dict3;
     cocos2d::CCDictionary* dict4;
-    bool somevalue;
+    bool editorInit_;
     char byte48D;
     char field_48E;
     char field_48F;
@@ -117,7 +117,7 @@ public:
     bool field_50A;
     bool field_50B;
     GJGroundLayer* GLayer_;
-    std::string levelString_;
+    std::string* levelString_;
     int* weirdAlloc;
     std::vector<GameObject*> objectVector_;
     std::vector<GameObject*> other5;
