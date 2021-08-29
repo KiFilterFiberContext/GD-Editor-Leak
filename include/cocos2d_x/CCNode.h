@@ -54,7 +54,8 @@ public:
 	cocos2d::CCPoint m_obAnchorPoint;
 	cocos2d::CCSize m_obContentSize;
 	CCAffineTransform m_sAdditionalTransform;
-	unsigned char gap74[ 48 ];
+	CCAffineTransform m_sTransform;
+	CCAffineTransform m_sInverse;
 	cocos2d::CCCamera* m_pCamera;
 	cocos2d::CCGridBase* m_grid;
 	int m_ZOrder;
