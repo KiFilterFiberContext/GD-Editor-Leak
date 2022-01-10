@@ -1,5 +1,5 @@
 # Geometry Dash 2.2 Leak Editor 
-This repository contains reverse engineered structures and reimplemented editor code needed for my restoration of the editor in the 2019 Geometry Dash 2.2 leaks
+This repository contains reverse engineered structures and reimplemented editor code needed for my restoration of the editor in the 2019 Geometry Dash 2.2 leaks.  In the commit history you can find older versions that you may be able to compile out-of-the-box with (1.1 and 1.1.2).  The current code contains code **only** compatible with the leaked GD World from 2019 (as it's the most updated leak).
 
 
 ## Features
